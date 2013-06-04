@@ -21,17 +21,17 @@ class GenerateDoctrineEntityCommand extends GenerateDoctrineCommand
     protected function configure()
     {
         $this
-            ->setName('tool-dev:generate:generate:entity')
+            ->setName('tool-dev:generate:entity')
             ->setDescription('Generates a new Doctrine entity inside a bundle')
             ->addOption('entity', null, InputOption::VALUE_REQUIRED, 'The entity class name to initialize (shortcut notation)')
             ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'The fields to create with the new entity')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)', 'annotation')
             ->addOption('with-repository', null, InputOption::VALUE_NONE, 'Whether to generate the entity repository or not')
             ->setHelp(<<<EOT
-The <info>tool-dev:generate:generate:entity</info> task generates a new Doctrine
+The <info>tool-dev:generate:entity</info> task generates a new Doctrine
 entity inside a bundle:
 
-<info>php app/console tool-dev:generate:generate:entity --entity=AcmeBlogBundle:Blog/Post</info>
+<info>php app/console tool-dev:generate:entity --entity=AcmeBlogBundle:Blog/Post</info>
 
 The above command would initialize a new entity in the following entity
 namespace <info>Acme\BlogBundle\Entity\Blog\Post</info>.
@@ -39,22 +39,22 @@ namespace <info>Acme\BlogBundle\Entity\Blog\Post</info>.
 You can also optionally specify the fields you want to generate in the new
 entity:
 
-<info>php app/console tool-dev:generate:generate:entity --entity=AcmeBlogBundle:Blog/Post --fields="title:string(255) body:text"</info>
+<info>php app/console tool-dev:generate:entity --entity=AcmeBlogBundle:Blog/Post --fields="title:string(255) body:text"</info>
 
 The command can also generate the corresponding entity repository class with the
 <comment>--with-repository</comment> option:
 
-<info>php app/console tool-dev:generate:generate:entity --entity=AcmeBlogBundle:Blog/Post --with-repository</info>
+<info>php app/console tool-dev:generate:entity --entity=AcmeBlogBundle:Blog/Post --with-repository</info>
 
 By default, the command uses annotations for the mapping information; change it
 with <comment>--format</comment>:
 
-<info>php app/console tool-dev:generate:generate:entity --entity=AcmeBlogBundle:Blog/Post --format=yml</info>
+<info>php app/console tool-dev:generate:entity --entity=AcmeBlogBundle:Blog/Post --format=yml</info>
 
 To deactivate the interaction mode, simply use the `--no-interaction` option
 without forgetting to pass all needed options:
 
-<info>php app/console tool-dev:generate:generate:entity --entity=AcmeBlogBundle:Blog/Post --format=annotation --fields="title:string(255) body:text" --with-repository --no-interaction</info>
+<info>php app/console tool-dev:generate:entity --entity=AcmeBlogBundle:Blog/Post --format=annotation --fields="title:string(255) body:text" --with-repository --no-interaction</info>
 EOT
         );
     }

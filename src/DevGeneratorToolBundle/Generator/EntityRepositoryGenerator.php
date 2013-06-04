@@ -96,6 +96,8 @@ class <className> extends BaseRepository
 
     public function writeEntityRepositoryClass($fullClassName, $outputDirectory, $useBaseTpl = false)
     {
+
+
         $code = $this->generateEntityRepositoryClass($fullClassName, $useBaseTpl);
         $path = $outputDirectory . DIRECTORY_SEPARATOR
               . str_replace('\\', \DIRECTORY_SEPARATOR, $fullClassName) . '.php';

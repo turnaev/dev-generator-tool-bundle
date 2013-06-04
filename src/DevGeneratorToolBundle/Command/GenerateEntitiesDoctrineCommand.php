@@ -22,7 +22,7 @@ class GenerateEntitiesDoctrineCommand extends GenerateEntitiesDoctrineCommandPar
     protected function configure()
     {
         parent::configure();
-        $this->setName('tool-dev:generate:generate:entities');
+        $this->setName('tool-dev:generate:entities');
     }
 
     /**

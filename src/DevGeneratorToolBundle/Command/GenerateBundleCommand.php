@@ -37,28 +37,29 @@ class GenerateBundleCommand extends ContainerAwareCommand
             ))
             ->setDescription('Generates a bundle')
             ->setHelp(<<<EOT
-The <info>tool-dev:generate:bundle</info> command helps you generates new bundles.
+The <info>tool-dev:bundle</info> command helps you generates new bundles.
 
 By default, the command interacts with the developer to tweak the generation.
 Any passed option will be used as a default value for the interaction
 (<comment>--namespace</comment> is the only one needed if you follow the
 conventions):
 
-<info>php app/console tool-dev:generate:bundle --namespace=Acme/BlogBundle</info>
+<info>php app/console tool-dev:bundle --namespace=Acme/BlogBundle</info>
 
 Note that you can use <comment>/</comment> instead of <comment>\\ </comment>for the namespace delimiter to avoid any
 problem.
 
 If you want to disable any user interaction, use <comment>--no-interaction</comment> but don't forget to pass all needed options:
 
-<info>php app/console tool-dev:generate:bundle --namespace=Acme/BlogBundle --dir=src [--bundle-name=...] --no-interaction</info>
+<info>php app/console tool-dev:bundle --namespace=Acme/BlogBundle --dir=src [--bundle-name=...] --no-interaction</info>
 
 Note that the bundle namespace must end with "Bundle".
 EOT
             )
             ->setName('tool-dev:generate:bundle')
-
         ;
+
+
     }
 
     /**
@@ -69,6 +70,7 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
         $dialog = $this->getDialogHelper();
 
         if ($input->isInteractive()) {
@@ -290,6 +292,9 @@ EOT
 
     protected function updateRouting($dialog, InputInterface $input, OutputInterface $output, $bundle, $format)
     {
+
+        $baseNamespace = $this->getContainer()->getParameter('dev_generator_tool.baseNamespace');
+
         $auto = true;
         if ($input->isInteractive()) {
             $auto = $dialog->askConfirmation($output, $dialog->getQuestion('Confirm automatic update of the Routing', 'yes', '?'), true);
@@ -301,7 +306,7 @@ EOT
         //$routing = new RoutingManipulator($this->getContainer()->getParameter('kernel.root_dir').'/config/routing.yml');
 
         //added to admin bundle routing
-        $routing = new RoutingManipulator($this->getContainer()->getParameter('kernel.root_dir').'/../src/VN/CoreBundle/Resources/config/routing.xml');
+        $routing = new RoutingManipulator($this->getContainer()->getParameter('kernel.root_dir').'/../src/'.$baseNamespace.'/CoreBundle/Resources/config/routing.xml');
 
         try {
             $ret = $auto ? $routing->addResource($bundle, $format) : false;

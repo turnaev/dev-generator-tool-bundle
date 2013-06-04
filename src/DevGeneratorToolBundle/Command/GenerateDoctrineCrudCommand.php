@@ -37,18 +37,18 @@ class GenerateDoctrineCrudCommand extends GenerateDoctrineCommand
             ))
             ->setDescription('Generates a CRUD based on a Doctrine entity')
             ->setHelp(<<<EOT
-The <info>tool-dev:generate:generate:crud</info> command generates a CRUD based on a Doctrine entity.
+The <info>tool-dev:generate:crud</info> command generates a CRUD based on a Doctrine entity.
 
 The default command only generates the list and show actions.
 
-<info>php app/console tool-dev:generate:generate:crud --entity=AcmeBlogBundle:Post --route-prefix=post_admin</info>
+<info>php app/console tool-dev:generate:crud --entity=AcmeBlogBundle:Post --route-prefix=post_admin</info>
 
 Using the --with-write option allows to generate the new, edit and delete actions.
 
-<info>php app/console tool-dev:generate:generate:crud --entity=AcmeBlogBundle:Post --route-prefix=post_admin --with-write</info>
+<info>php app/console tool-dev:generate:crud --entity=AcmeBlogBundle:Post --route-prefix=post_admin --with-write</info>
 EOT
             )
-            ->setName('tool-dev:generate:generate:crud')
+            ->setName('tool-dev:generate:crud')
         ;
     }
 

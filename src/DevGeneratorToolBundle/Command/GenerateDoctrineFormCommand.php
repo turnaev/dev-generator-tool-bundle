@@ -27,12 +27,12 @@ class GenerateDoctrineFormCommand extends GenerateDoctrineCommand
             ))
             ->setDescription('Generates a form type class based on a Doctrine entity')
             ->setHelp(<<<EOT
-The <info>tool-dev:generate:generate:form</info> command generates a form class based on a Doctrine entity.
+The <info>tool-dev:generate:form</info> command generates a form class based on a Doctrine entity.
 
-<info>php app/console tool-dev:generate:generate:form AcmeBlogBundle:Post</info>
+<info>php app/console tool-dev:generate:form AcmeBlogBundle:Post</info>
 EOT
             )
-            ->setName('tool-dev:generate:generate:form')
+            ->setName('tool-dev:generate:form')
         ;
     }
 
