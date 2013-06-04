@@ -1,0 +1,32 @@
+{{ "{% extends '::Crud/list.html.twig' %}" }}
+
+{{ "{% set crud_path_new=path('" ~ route_name_prefix ~ "_new') %}" }}
+{{ "{% set crud_rout_show='" ~ route_name_prefix ~ "_show' %}" }}
+{{ "{% set crud_rout_edit='" ~ route_name_prefix ~ "_edit' %}" }}
+
+{{ "{% block action_title %}<h3>" ~ entity ~ " list</h3>{% endblock %}" }}
+
+{{ "{% block table_header %}" }}
+{% for field, metadata in fields %}
+    <th>{{ metadata.label|capitalize }}</th>
+{% endfor %}
+{{ "{% endblock table_header %}" }}
+
+{{ "{% block table_row %}" }}
+{% for field, metadata in fields %}
+    <td>{% spaceless %}
+        {% if metadata.type in ['date', 'datetime'] %}
+            {{ "{{ entity." ~ field ~ "|type_datetime }}" }}
+        {% elseif field in ['id'] %}
+            {{ "{{ entity." ~ field ~ "|type_id }}" }}
+        {% elseif metadata.type in ['boolean'] %}
+            {{ "{{ entity." ~ field ~ "|type_boolean }}" }}
+        {% elseif metadata.type in ['array'] %}
+            {{ "{{ entity." ~ field ~ "|type_array }}" }}
+        {% else %}
+            {{- "{{ entity." ~ field ~ " }}" -}}
+        {% endif %}
+    {% endspaceless %}</td>
+{% endfor %}
+{{ "{% endblock table_row %}" }}
+

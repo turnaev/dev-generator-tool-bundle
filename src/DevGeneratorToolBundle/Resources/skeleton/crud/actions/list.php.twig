@@ -1,0 +1,33 @@
+
+    /**
+     * Lists all {{ entity }} entities.
+     *
+{% if 'annotation' == format %}
+     * @Route("/", name="{{ route_name_prefix }}")
+     * @Method("GET")
+     * @Template()
+{% endif %}
+     */
+    public function listAction($page)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getRepository('LPProductBundle:Vendor')->getQuery();
+
+        $pager = new Pagerfanta(new DoctrineORMAdapter($query));
+
+        try {
+            $pager->setCurrentPage($page);
+        } catch(NotValidCurrentPageException $e) {
+            throw new NotFoundHttpException();
+        }
+
+{% if 'annotation' == format %}
+        return [
+            'pager' => $pager,
+        ];
+{% else %}
+        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:Crud/list.html.twig', [
+            'pager' => $pager,
+        ]);
+{% endif %}
+    }

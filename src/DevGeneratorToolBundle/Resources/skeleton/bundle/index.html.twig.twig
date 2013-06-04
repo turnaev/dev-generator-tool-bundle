@@ -1,0 +1,6 @@
+{{ "{% extends '" ~ bundle ~ "::layout.html.twig' %}" }}
+{% raw %}{% block content %}{% endraw %}
+{% raw %}{% spaceless %}{% endraw %}
+    Hello {% raw %}{{ name }}{% endraw %}
+{% raw %}{% endspaceless %}{% endraw %}
+{% raw %}{% endblock %}{% endraw %}

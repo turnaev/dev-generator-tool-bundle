@@ -1,0 +1,31 @@
+{{ "{% extends '::Crud/show.html.twig' %}" }}
+
+{{ "{% set crud_path_list=path('" ~ route_name_prefix ~ "_list') %}" }}
+{{ "{% set crud_path_new=path('" ~ route_name_prefix ~ "_new') %}" }}
+
+{{ "{% set crud_path_edit=path('" ~ route_name_prefix ~ "_edit', {'id': entity.id}) %}" }}
+{{ "{% set crud_path_delete=path('" ~ route_name_prefix ~ "_delete', {'id': entity.id}) %}" }}
+{{ "{% set delete_message='Do you really want to delete this " ~ entity ~ "?' %}" }}
+
+{{ "{% block action_title %}<h3>" ~ entity ~ " show {{ entity.id|type_id }}</h3>{% endblock %}" }}
+
+{{ "{% block table_body %}" }}
+{% for field, metadata in fields %}
+    <tr>
+        <th>{{ metadata.label|capitalize }}</th>
+        <td>{% spaceless %}
+            {% if metadata.type in ['date', 'datetime'] %}
+                {{ "{{ entity." ~ field ~ "|type_datetime }}" }}
+            {% elseif field in ['id'] %}
+                {{ "{{ entity." ~ field ~ "|type_id }}" }}
+            {% elseif metadata.type in ['boolean'] %}
+                {{ "{{ entity." ~ field ~ "|type_boolean }}" }}
+            {% elseif metadata.type in ['array'] %}
+                {{ "{{ entity." ~ field ~ "|type_array }}" }}
+            {% else %}
+                {{- "{{ entity." ~ field ~ " }}" -}}
+            {% endif %}
+        {% endspaceless %}</td>
+    </tr>
+{% endfor %}
+{{ "{% endblock %}" }}

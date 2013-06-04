@@ -1,0 +1,22 @@
+{
+    "name": "turnaev/dev-generator-tool-bundle",
+    "type": "cli",
+    "description": "Console tool bundle for Symfony 2.2+",
+    "keywords": ["console","tool","twig", "generator"],
+    "homepage": "https://github.com/turnaev/dev-generator-tool-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vladimir Turnaev",
+            "email": "turanev@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+    },
+    
+    "autoload": {
+        "psr-0": { "DevGeneratorToolBundle\\": "src/" }
+    }
+}
