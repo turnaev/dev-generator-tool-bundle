@@ -54,7 +54,7 @@ class GenerateControllerCommand extends ContainerAwareCommand
             ))
             ->setDescription('Generates a controller')
             ->setHelp(<<<EOT
-The <info>tool-dev:controller</info> command helps you generates new controllers
+The <info>tool-dev:generate:controller</info> command helps you generates new controllers
 inside bundles.
 
 By default, the command interacts with the developer to tweak the generation.
@@ -62,15 +62,15 @@ Any passed option will be used as a default value for the interaction
 (<comment>--bundle</comment> and <comment>--controller</comment> are the only
 ones needed if you follow the conventions):
 
-<info>php app/console tool-dev:controller --controller=AcmeBlogBundle:Post</info>
+<info>php app/console tool-dev:generate:controller --controller=AcmeBlogBundle:Post</info>
 
 If you want to disable any user interaction, use <comment>--no-interaction</comment>
 but don't forget to pass all needed options:
 
-<info>php app/console tool-dev:controller --controller=AcmeBlogBundle:Post --no-interaction</info>
+<info>php app/console tool-dev:generate:controller --controller=AcmeBlogBundle:Post --no-interaction</info>
 EOT
             )
-            ->setName('tool-dev:controller')
+            ->setName('tool-dev:generate:controller')
         ;
     }
 

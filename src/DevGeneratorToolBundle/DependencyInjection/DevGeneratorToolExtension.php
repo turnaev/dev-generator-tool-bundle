@@ -25,6 +25,6 @@ class DevGeneratorToolExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $container->setParameter('dev_generator_tool.baseNamespace', $config['baseNamespace']);
+        $container->setParameter('dev_generator_tool.coreBundlePath', $config['coreBundlePath']);
     }
 }

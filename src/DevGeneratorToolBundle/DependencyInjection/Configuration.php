@@ -20,7 +20,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('dev_generator_tool');
         $rootNode->children()
-            ->scalarNode('baseNamespace')
+            ->scalarNode('coreBundlePath')
                 ->isRequired()
                 ->end()
             ->end()
