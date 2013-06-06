@@ -11,9 +11,9 @@
     public function listAction($page)
     {
         $em = $this->getDoctrine()->getManager();
-        $query = $em->getRepository('LPProductBundle:Vendor')->getQuery();
+        $queryBuilder = $em->getRepository('{{ bundle }}:{{ entity }}')->createQueryBuilder('i');
 
-        $pager = new Pagerfanta(new DoctrineORMAdapter($query));
+        $pager = new Pagerfanta(new DoctrineORMAdapter($queryBuilder));
 
         try {
             $pager->setCurrentPage($page);
