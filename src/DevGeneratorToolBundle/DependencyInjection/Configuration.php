@@ -24,6 +24,10 @@ class Configuration implements ConfigurationInterface
                 ->isRequired()
                 ->end()
             ->end()
+            ->children()
+                ->scalarNode('coreBundleNs')
+                ->isRequired()
+            ->end()
         ;
 
         return $treeBuilder;

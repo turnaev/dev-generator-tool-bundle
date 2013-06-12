@@ -21,6 +21,12 @@ class DoctrineCrudGenerator extends Generator
     protected $metadata;
     protected $format;
     protected $actions;
+    protected $coreBundleNs;
+
+    public function setCoreBundleNs($coreBundlePath)
+    {
+        $this->coreBundleNs = $coreBundlePath;
+    }
 
     /**
      * Constructor.
@@ -171,6 +177,7 @@ class DoctrineCrudGenerator extends Generator
             'namespace'         => $this->bundle->getNamespace(),
             'entity_namespace'  => $entityNamespace,
             'format'            => $this->format,
+            'coreBundleNs'    => $this->coreBundleNs
         ));
     }
 

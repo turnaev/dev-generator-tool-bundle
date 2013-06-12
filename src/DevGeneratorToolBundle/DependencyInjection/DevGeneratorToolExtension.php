@@ -26,5 +26,6 @@ class DevGeneratorToolExtension extends Extension
         $loader->load('services.yml');
 
         $container->setParameter('dev_generator_tool.coreBundlePath', $config['coreBundlePath']);
+        $container->setParameter('dev_generator_tool.coreBundleNs', $config['coreBundleNs']);
     }
 }

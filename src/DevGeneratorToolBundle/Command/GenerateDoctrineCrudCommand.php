@@ -77,7 +77,7 @@ EOT
 
         $dialog->writeSection($output, 'CRUD generation');
 
-        $entityClass = $this->getContainer()->get('doctrine')->getEntityNamespace($bundle).'\\'.$entity;
+        $entityClass = $this->getContainer()->get('doctrine')->getAliasNamespace($bundle).'\\'.$entity;
         $metadata    = $this->getEntityMetadata($entityClass);
         $bundle      = $this->getContainer()->get('kernel')->getBundle($bundle);
 
@@ -126,7 +126,7 @@ EOT
         list($bundle, $entity) = $this->parseShortcutNotation($entity);
 
         // Entity exists?
-        $entityClass = $this->getContainer()->get('doctrine')->getEntityNamespace($bundle).'\\'.$entity;
+        $entityClass = $this->getContainer()->get('doctrine')->getAliasNamespace($bundle).'\\'.$entity;
         $metadata = $this->getEntityMetadata($entityClass);
 
         // write?
@@ -194,6 +194,7 @@ EOT
         $output->write('Importing the CRUD routes: ');
         $this->getContainer()->get('filesystem')->mkdir($bundle->getPath().'/Resources/config/');
         $routing = new RoutingManipulator($bundle->getPath().'/Resources/config/routing.xml');
+
         try {
             $ret = $auto ? $routing->addResource($bundle->getName(), $format, '/'.$prefix, 'routing/'.strtolower(str_replace('\\', '_', $entity))) : false;
         } catch (\RuntimeException $exc) {
@@ -230,6 +231,10 @@ EOT
     {
         if (null === $this->generator) {
             $this->generator = new DoctrineCrudGenerator($this->getContainer()->get('filesystem'), __DIR__.'/../Resources/skeleton/crud');
+
+            $coreBundlePath = $this->getContainer()->getParameter('dev_generator_tool.coreBundleNs');
+            $this->generator->setCoreBundleNs($coreBundlePath);
+
         }
 
         return $this->generator;
@@ -238,6 +243,9 @@ EOT
     public function setGenerator(DoctrineCrudGenerator $generator)
     {
         $this->generator = $generator;
+
+        $coreBundlePath = $this->getContainer()->getParameter('dev_generator_tool.coreBundleNs');
+        $this->generator->setCoreBundleNs($coreBundlePath);
     }
 
     protected function getFormGenerator()

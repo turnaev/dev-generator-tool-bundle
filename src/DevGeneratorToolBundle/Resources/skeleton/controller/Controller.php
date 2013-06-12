@@ -2,7 +2,7 @@
 
 namespace {{ namespace }}\Controller;
 
-use LP\CoreBundle\Controller\BaseController;
+use {{ coreBundleNs }}\Controller\BaseController;
 {% if 'annotation' == format.routing -%}
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
