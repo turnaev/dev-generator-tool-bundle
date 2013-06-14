@@ -4,14 +4,12 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
-    <route id="{{ route_name_prefix }}_list" pattern="list/{page}">
+    <route id="{{ route_name_prefix }}_list" pattern="/list">
         <default key="_controller">{{ bundle }}:{{ entity }}:list</default>
-        <default key="page">1</default>
-        <requirement key="page">\d+</requirement>
     </route>
 
     {% if 'new' in actions %}
-<route id="{{ route_name_prefix }}_new" pattern="/new">
+    <route id="{{ route_name_prefix }}_new" pattern="/new">
         <default key="_controller">{{ bundle }}:{{ entity }}:new</default>
     </route>
 
