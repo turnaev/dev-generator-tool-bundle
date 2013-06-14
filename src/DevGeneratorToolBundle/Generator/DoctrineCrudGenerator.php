@@ -173,6 +173,7 @@ class DoctrineCrudGenerator extends Generator
             'dir'               => $this->skeletonDir,
             'bundle'            => $this->bundle->getName(),
             'entity'            => $this->entity,
+            'fields'            => $this->getFieldMappings(),
             'entity_class'      => $entityClass,
             'namespace'         => $this->bundle->getNamespace(),
             'entity_namespace'  => $entityNamespace,

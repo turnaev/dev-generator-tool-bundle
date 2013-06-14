@@ -1,33 +1,38 @@
 
     /**
-     * Lists all {{ entity }} entities.
+     * List all {{ entity }} entities.
      *
-{% if 'annotation' == format %}
-     * @Route("/", name="{{ route_name_prefix }}")
-     * @Method("GET")
-     * @Template()
-{% endif %}
      */
-    public function listAction($page)
+    public function listAction()
     {
-        $em = $this->getDoctrine()->getManager();
-        $queryBuilder = $em->getRepository('{{ bundle }}:{{ entity }}')->createQueryBuilder('i');
-
-        $pager = new Pagerfanta(new DoctrineORMAdapter($queryBuilder));
-
-        try {
-            $pager->setCurrentPage($page);
-        } catch(NotValidCurrentPageException $e) {
-            throw new NotFoundHttpException();
-        }
-
-{% if 'annotation' == format %}
-        return [
-            'pager' => $pager,
+        /**
+         * @var GridBuilder $gridBuilder
+         */
+        $gridBuilder = $this->get('grid.builder');
+        $columns = [
+        {% for field, metadata in fields %} {{"             %-30s=>%s"|format("'" ~ field ~ "'", "['title' => '" ~metadata.label|capitalize ~"',],") }}
+        {% endfor %}
         ];
-{% else %}
-        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:Crud/list.html.twig', [
-            'pager' => $pager,
-        ]);
-{% endif %}
+
+
+        $gridBuilder
+            ->setGridId('user')
+            ->setExports(['CSV', 'Excel', 'XML'])
+            ->addCreateControll('{{ route_prefix }}_new')
+            ->setRouteUrl($this->generateUrl('{{ route_prefix }}_list'))
+            ->setSource('{{ bundle }}:{{ entity }}', $columns)
+            ->setRowActions([
+                ['detail', '{{ route_prefix }}_show', false, '_self', ['icon'=>'icon-eye-open']],
+                ['edit',   '{{ route_prefix }}_edit', false, '_self', ['icon'=>'icon-edit']],
+            ]);
+
+            $massActionDelete = new DeleteMassAction(true);
+            $massActionDelete->setParameters(['icon'=>'icon-trash']);
+
+            $gridBuilder->setMassActions([
+                $massActionDelete
+            ]);
+
+        return $gridBuilder->getGridResponse('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:Crud/list.html.twig');
     }
+

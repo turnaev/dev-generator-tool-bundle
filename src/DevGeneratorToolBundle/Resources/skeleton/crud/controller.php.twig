@@ -5,6 +5,7 @@ namespace {{ namespace }}\Controller{{ entity_namespace ? '\\' ~ entity_namespac
 {% if 'new' in actions or 'edit' in actions or 'delete' in actions %}
 use Symfony\Component\HttpFoundation\Request;
 {%- endif %}
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use {{ coreBundleNs }}\Controller\BaseController;
 {% if 'annotation' == format -%}
@@ -18,10 +19,8 @@ use {{ namespace }}\Entity\{{ entity }};
 use {{ namespace }}\Form\Type\{{ entity }}FormType;
 {% endif %}
 
-use Pagerfanta\Pagerfanta;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Pagerfanta\Exception\NotValidCurrentPageException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use APY\DataGridBundle\Grid\Action\DeleteMassAction;
+use LP\CoreBundle\Grid\GridBuilder;
 
 /**
  * {{ entity }} controller.
