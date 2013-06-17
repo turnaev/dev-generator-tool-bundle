@@ -5,14 +5,19 @@
      */
     public function listAction()
     {
+
+
         /**
          * @var GridBuilder $gridBuilder
          */
         $gridBuilder = $this->get('grid.builder');
+        {% set format = "             %-" ~ maxColumnNameSize ~ "s => %s" %}
+
         $columns = [
-        {% for field, metadata in fields %} {{"             %-30s=>%s"|format("'" ~ field ~ "'", "['title' => '" ~metadata.label|capitalize ~"',],") }}
+        {% for field, metadata in fields %} {{format|format("'" ~ field ~ "'", "['title' => '" ~metadata.label|capitalize ~"',],") }}
         {% endfor %}
         ];
+
 
 
         $gridBuilder

@@ -166,6 +166,14 @@ class DoctrineCrudGenerator extends Generator
             throw new \RuntimeException('Unable to generate the controller as it already exists.');
         }
 
+
+        $fieldMappings = $this->getFieldMappings();
+
+        $maxColumnNameSize = 0;
+        foreach($fieldMappings as $fieldMapping) {
+            $maxColumnNameSize = max($maxColumnNameSize, $fieldMapping['columnNameSize']);
+        }
+
         $this->renderFile($this->skeletonDir, 'controller.php.twig', $target, array(
             'actions'           => $this->actions,
             'route_prefix'      => $this->routePrefix,
@@ -173,12 +181,13 @@ class DoctrineCrudGenerator extends Generator
             'dir'               => $this->skeletonDir,
             'bundle'            => $this->bundle->getName(),
             'entity'            => $this->entity,
-            'fields'            => $this->getFieldMappings(),
+            'fields'            => $fieldMappings,
             'entity_class'      => $entityClass,
             'namespace'         => $this->bundle->getNamespace(),
             'entity_namespace'  => $entityNamespace,
             'format'            => $this->format,
-            'coreBundleNs'    => $this->coreBundleNs
+            'coreBundleNs'      => $this->coreBundleNs,
+            'maxColumnNameSize' => $maxColumnNameSize,
         ));
     }
 
@@ -215,14 +224,22 @@ class DoctrineCrudGenerator extends Generator
      */
     protected function generateIndexView($dir)
     {
+        $fieldMappings = $this->getFieldMappings();
+
+        $maxColumnNameSize = 0;
+        foreach($fieldMappings as $fieldMapping) {
+            $maxColumnNameSize = max($maxColumnNameSize, $fieldMapping['columnNameSize']);
+        }
+
         $this->renderFile($this->skeletonDir, 'views/list.html.twig.twig', $dir.'/Crud/list.html.twig', array(
             'dir'               => $this->skeletonDir,
             'entity'            => $this->entity,
-            'fields'            => $this->getFieldMappings(),
+            'fields'            => $fieldMappings,
             'actions'           => $this->actions,
             'record_actions'    => $this->getRecordActions(),
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
+            'maxColumnNameSize' => $maxColumnNameSize,
         ));
     }
 
@@ -235,6 +252,7 @@ class DoctrineCrudGenerator extends Generator
 
             foreach($this->fieldMappings as &$fieldMapping) {
                 $fieldMapping['label'] = preg_replace('/_/', ' ', $fieldMapping['columnName']);
+                $fieldMapping['columnNameSize'] = strlen($fieldMapping['columnName']);
             }
         }
 
@@ -247,13 +265,21 @@ class DoctrineCrudGenerator extends Generator
      */
     protected function generateShowView($dir)
     {
+        $fieldMappings = $this->getFieldMappings();
+
+        $maxColumnNameSize = 0;
+        foreach($fieldMappings as $fieldMapping) {
+            $maxColumnNameSize = max($maxColumnNameSize, $fieldMapping['columnNameSize']);
+        }
+
         $this->renderFile($this->skeletonDir, 'views/show.html.twig.twig', $dir.'/Crud/show.html.twig', array(
             'dir'               => $this->skeletonDir,
             'entity'            => $this->entity,
-            'fields'            => $this->getFieldMappings(),
+            'fields'            => $fieldMappings,
             'actions'           => $this->actions,
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
+            'maxColumnNameSize' => $maxColumnNameSize,
         ));
     }
 
