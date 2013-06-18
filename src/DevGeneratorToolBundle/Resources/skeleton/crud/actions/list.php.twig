@@ -27,8 +27,8 @@
             ->setRouteUrl($this->generateUrl('{{ route_prefix }}_list'))
             ->setSource('{{ bundle }}:{{ entity }}', $columns)
             ->setRowActions([
-                ['detail', '{{ route_prefix }}_show', false, '_self', ['icon'=>'icon-eye-open']],
-                ['edit',   '{{ route_prefix }}_edit', false, '_self', ['icon'=>'icon-edit']],
+                ['Detail', '{{ route_prefix }}_show', false, '_self', ['icon'=>'icon-eye-open']],
+                ['Edit',   '{{ route_prefix }}_edit', false, '_self', ['icon'=>'icon-edit']],
             ]);
 
             $massActionDelete = new DeleteMassAction(true);
