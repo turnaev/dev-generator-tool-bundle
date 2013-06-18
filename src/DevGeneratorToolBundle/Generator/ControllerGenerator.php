@@ -63,8 +63,8 @@ class ControllerGenerator extends Generator
 
         $parameters['actions'] = $actions;
 
-        $this->renderFile($this->skeletonDir, 'Controller.php', $controllerFile, $parameters);
-        $this->renderFile($this->skeletonDir, 'ControllerTest.php', $dir.'/Tests/Controller/'.$controller.'ControllerTest.php', $parameters);
+        $this->renderFile($this->skeletonDir, 'Controller.php.twig', $controllerFile, $parameters);
+        $this->renderFile($this->skeletonDir, 'ControllerTest.php.twig', $dir.'/Tests/Controller/'.$controller.'ControllerTest.php', $parameters);
     }
 
     public function generateRouting(BundleInterface $bundle, $controller, array $action, $format)
