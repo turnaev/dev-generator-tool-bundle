@@ -61,15 +61,21 @@ class DoctrineFormGenerator extends Generator
         $parts = explode('\\', $entity);
         array_pop($parts);
 
+        $fields           = $this->getFieldsFromMetadata($metadata);
+        $maxColumnNameSize = 0;
+        foreach($fields as $field) {
+            $maxColumnNameSize = max(strlen($field)+2, $maxColumnNameSize);
+        }
         $this->renderFile($this->skeletonDir, 'FormType.php.twig', $this->classPath, array(
             'dir'              => $this->skeletonDir,
-            'fields'           => $this->getFieldsFromMetadata($metadata),
+            'fields'           => $fields,
             'namespace'        => $bundle->getNamespace(),
             'entity_namespace' => implode('\\', $parts),
             'entity_class'     => $entityClass,
             'form_class'       => $this->className.'FormType',
             'form_label'       => $entityClass,
             'form_type_name'   => strtolower(str_replace('\\', '_', $bundle->getNamespace()).($parts ? '_' : '').implode('_', $parts).'_'.$this->className),
+            'maxColumnNameSize' => $maxColumnNameSize,
         ));
     }
 

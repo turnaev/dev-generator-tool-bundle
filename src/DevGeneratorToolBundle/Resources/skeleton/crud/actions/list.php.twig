@@ -5,8 +5,6 @@
      */
     public function listAction()
     {
-
-
         /**
          * @var GridBuilder $gridBuilder
          */
@@ -14,11 +12,15 @@
         {% set format = "             %-" ~ maxColumnNameSize ~ "s => %s" %}
 
         $columns = [
-        {% for field, metadata in fields %} {{format|format("'" ~ field ~ "'", "['title' => '" ~metadata.label|capitalize ~"',],") }}
+        {% for field, metadata in fields %}
+{% if field == 'id' %}
+{% set d= "'translationDomain' => 'messages'" %}
+{% else %}
+{% set d= "'translationDomain' => '" ~ entity ~ "_entity'" %}
+{% endif %}
+{{ format|format("'" ~ field ~ "'", "[" ~ d ~ "],") }}
         {% endfor %}
         ];
-
-
 
         $gridBuilder
             ->setGridId('user')

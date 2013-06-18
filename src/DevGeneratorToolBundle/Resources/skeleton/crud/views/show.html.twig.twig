@@ -9,10 +9,15 @@
 
 {{ "{% block action_title %}<h3>" ~ entity ~ " show {{ entity.id|type_id }}</h3>{% endblock %}" }}
 
+{{ "{% set translationDomain = '" ~ entity ~ "_entity' %}" }}
 {{ "{% block table_body %}" }}
 {% for field, metadata in fields %}
     <tr>
-        <th>{{ metadata.label|capitalize }}</th>
+        {% if field in ['id'] %}
+<th>{{ "{{ '" ~ field ~ "'|trans({}, 'messages')  }}" }}</th>
+{% else %}
+<th>{{ "{{ '" ~ field ~ "'|trans({}, translationDomain)  }}" }}</th>
+{% endif %}
         <td>{% spaceless %}
             {% if metadata.type in ['date', 'datetime'] %}
                 {{ "{{ entity." ~ field ~ "|type_datetime }}" }}

@@ -10,13 +10,11 @@ class {{ form_class }} extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-        {%- for field in fields %}
+        {% set format = "%-" ~ maxColumnNameSize ~ "s" %}
 
-            ->add('{{ field }}')
-
+        $builder{{ "\n" }}{%- for field in fields %}
+            ->add({{ format|format("'" ~field ~ "'") }}, null, ['label'=>{{ format|format("'" ~field ~ "'") }}, 'translation_domain' => '{{ entity_class }}_entity']){{ "\n" }}
         {%- endfor %}
-
         ;
     }
 
