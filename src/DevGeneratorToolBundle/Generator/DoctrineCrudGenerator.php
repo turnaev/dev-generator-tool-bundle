@@ -230,22 +230,47 @@ class DoctrineCrudGenerator extends Generator
             }
         }
 
+        $gt = new \DevConsoleToolBundle\Translater\GoogleTranslater();
+
         foreach(['ru', 'en'] as $locale) {
             $file = sprintf('%s/entity_%s.%s.yml', $dir, $this->entity, $locale);
 
             if(!file_exists($file)) {
-                file_put_contents($file, "#Localization file for the entity {$this->entity}. Locale: {$locale}.\n");
+                file_put_contents($file, "#Localization file for the entity {$this->entity}. Locale {$locale}.\n");
             }
             $comments = array_filter(file($file), function($str) {
                     return preg_match('/^#/', $str);
                 });
             $comments = join("\n", $comments);
 
-            $translationsArr = \Symfony\Component\Yaml\Yaml::parse($file);
-            $translationsArr = $translationsArr ? $translationsArr : [];
-            $translationsArr  = array_merge($trans, $translationsArr);
-            ksort($translationsArr);
+            if($locale == 'ru') {
 
+                $translationsArr = \Symfony\Component\Yaml\Yaml::parse($file);
+
+                $translationsArr = $translationsArr ? $translationsArr : [];
+
+                foreach($trans as $key=>$tran) {
+
+                    if(!isset($translationsArr[$key])) {
+                        $gtTran = $gt->translateText($tran, $fromLanguage = 'en', $toLanguage = 'ru');
+                        if(!$gt->getErrors()) {
+                            $tran = $gtTran;
+                        } else {
+                            echo 'Translator error. '.$gt->getErrors();
+                        }
+                        $tran = ucfirst($tran);
+                        $translationsArr[$key] = $tran;
+                    }
+                }
+
+            } else {
+
+                $translationsArr = \Symfony\Component\Yaml\Yaml::parse($file);
+                $translationsArr = $translationsArr ? $translationsArr : [];
+                $translationsArr  = array_merge($trans, $translationsArr);
+            }
+
+            ksort($translationsArr);
             $translationsYml = \Symfony\Component\Yaml\Yaml::dump($translationsArr);
 
             file_put_contents($file, $comments.$translationsYml);
