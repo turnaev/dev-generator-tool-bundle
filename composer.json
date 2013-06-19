@@ -14,7 +14,7 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "turnaev/dev-generator-tool-bundle": ">=1.0.7"
+        "turnaev/dev-console-tool-bundle": ">=1.0.7"
     },
     
     "autoload": {
