@@ -66,6 +66,7 @@ class DoctrineFormGenerator extends Generator
         foreach($fields as $field) {
             $maxColumnNameSize = max(strlen($field)+2, $maxColumnNameSize);
         }
+
         $this->renderFile($this->skeletonDir, 'FormType.php.twig', $this->classPath, array(
             'dir'              => $this->skeletonDir,
             'fields'           => $fields,
@@ -100,6 +101,7 @@ class DoctrineFormGenerator extends Generator
                 $fields[] = $fieldName;
             }
         }
+        asort($fields);
 
         return $fields;
     }

@@ -5,6 +5,8 @@
 {{ "{%  set crud_path_show=path('" ~ route_name_prefix ~ "_show', { 'id': entity.id }) %}" }}
 {{ "{%  set crud_path_update=path('" ~ route_name_prefix ~ "_update', { 'id': entity.id }) %}" }}
 {{ "{%  set crud_path_delete=path('" ~ route_name_prefix ~ "_delete', { 'id': entity.id }) %}" }}
+{{ "{% set delete_message= 'Do you really want to delete this %entity%?'|trans({'%entity%': '" ~ entity ~ "'}) %}" }}
 
-{{ "{%  set delete_message='Do you really want to delete this " ~ entity ~ "?' %}" }}
-{{ "{% block action_title %}<h3>" ~ entity ~ " edit {{ entity.id|type_id }}</h3>{% endblock %}" }}
+{{ "{% block action_title %}<h3>{{ 'Edit %entity% %id%'|trans({'%entity%':'" ~ entity ~ "', '%id%':entity.id|type_id})  }}</h3>{% endblock %}" }}
+
+

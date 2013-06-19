@@ -3,4 +3,5 @@
 {{  "{% set crud_path_create=path('" ~ route_name_prefix ~ "_create') %}" }}
 {{  "{% set crud_path_list=path('" ~ route_name_prefix ~ "_list') %}" }}
 
-{{  "{% block action_title %}<h3>" ~ entity ~ " creation</h3>{% endblock %}" }}
+{{  "{% block action_title %}<h3>{{ 'Creation %entity%'|trans({'%entity%':'" ~ entity ~ "'}) }}</h3>{% endblock %}" }}
+

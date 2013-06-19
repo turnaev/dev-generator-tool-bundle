@@ -13,7 +13,7 @@ class {{ form_class }} extends AbstractType
         {% set format = "%-" ~ maxColumnNameSize ~ "s" %}
 
         $builder{{ "\n" }}{%- for field in fields %}
-            ->add({{ format|format("'" ~field ~ "'") }}, null, ['label'=>{{ format|format("'" ~field ~ "'") }}, 'translation_domain' => '{{ entity_class }}_entity']){{ "\n" }}
+            ->add({{ format|format("'" ~field ~ "'") }}, null, ['label'=>{{ format|format("'" ~field ~ "'") }}, 'translation_domain' => 'entity_{{ entity_class }}']){{ "\n" }}
         {%- endfor %}
         ;
     }

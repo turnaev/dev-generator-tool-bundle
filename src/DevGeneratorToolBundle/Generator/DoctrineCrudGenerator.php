@@ -73,25 +73,25 @@ class DoctrineCrudGenerator extends Generator
 
         $this->generateControllerClass($forceOverwrite);
 
-        $dir = sprintf('%s/Resources/views/%s', $this->bundle->getPath(), str_replace('\\', '/', $this->entity));
-
-        if (!file_exists($dir)) {
-            $this->filesystem->mkdir($dir, 0777);
+        $dirViews = sprintf('%s/Resources/views/%s', $this->bundle->getPath(), str_replace('\\', '/', $this->entity));
+        if (!file_exists($dirViews)) {
+            $this->filesystem->mkdir($dirViews, 0777);
         }
-
-        $this->generateIndexView($dir);
+        $this->generateIndexView($dirViews);
 
         if (in_array('show', $this->actions)) {
-            $this->generateShowView($dir);
+            $this->generateShowView($dirViews);
         }
 
         if (in_array('new', $this->actions)) {
-            $this->generateNewView($dir);
+            $this->generateNewView($dirViews);
         }
 
         if (in_array('edit', $this->actions)) {
-            $this->generateEditView($dir);
+            $this->generateEditView($dirViews);
         }
+
+        $this->generateTranslation(sprintf('%s/Resources/translations', $this->bundle->getPath()));
 
         $this->generateTestClass();
         $this->generateConfiguration();
@@ -166,7 +166,6 @@ class DoctrineCrudGenerator extends Generator
             throw new \RuntimeException('Unable to generate the controller as it already exists.');
         }
 
-
         $fieldMappings = $this->getFieldMappings();
 
         $maxColumnNameSize = 0;
@@ -217,6 +216,42 @@ class DoctrineCrudGenerator extends Generator
         ));
     }
 
+    protected function generateTranslation($dir) {
+
+        if (!file_exists($dir)) {
+            $this->filesystem->mkdir($dir, 0777);
+        }
+
+        $fieldMappings = $this->getFieldMappings();
+        $trans = [];
+        foreach($fieldMappings as $fieldMapping) {
+            if($fieldMapping['fieldName'] != 'id') {
+                $trans[$fieldMapping['fieldName']] = $fieldMapping['label'];
+            }
+        }
+
+        foreach(['ru', 'en'] as $locale) {
+            $file = sprintf('%s/entity_%s.%s.yml', $dir, $this->entity, $locale);
+
+            if(!file_exists($file)) {
+                file_put_contents($file, "#Localization file for the entity {$this->entity}. Locale: {$locale}.\n");
+            }
+            $comments = array_filter(file($file), function($str) {
+                    return preg_match('/^#/', $str);
+                });
+            $comments = join("\n", $comments);
+
+            $translationsArr = \Symfony\Component\Yaml\Yaml::parse($file);
+            $translationsArr = $translationsArr ? $translationsArr : [];
+            $translationsArr  = array_merge($trans, $translationsArr);
+            ksort($translationsArr);
+
+            $translationsYml = \Symfony\Component\Yaml\Yaml::dump($translationsArr);
+
+            file_put_contents($file, $comments.$translationsYml);
+        }
+    }
+
     /**
      * Generates the list.html.twig template in the final bundle.
      *
@@ -230,6 +265,7 @@ class DoctrineCrudGenerator extends Generator
         foreach($fieldMappings as $fieldMapping) {
             $maxColumnNameSize = max($maxColumnNameSize, $fieldMapping['columnNameSize']);
         }
+
 
         $this->renderFile($this->skeletonDir, 'views/list.html.twig.twig', $dir.'/Crud/list.html.twig', array(
             'dir'               => $this->skeletonDir,
@@ -251,11 +287,17 @@ class DoctrineCrudGenerator extends Generator
             $this->fieldMappings = $this->metadata->fieldMappings;
 
             foreach($this->fieldMappings as &$fieldMapping) {
-                $fieldMapping['label'] = preg_replace('/_/', ' ', $fieldMapping['columnName']);
+                $fieldMapping['label'] = ucfirst(preg_replace('/_/', ' ', $fieldMapping['columnName']));
                 $fieldMapping['columnNameSize'] = strlen($fieldMapping['columnName']);
             }
-        }
 
+            ksort($this->fieldMappings);
+            if(isset($this->fieldMappings['id'])) {
+                $idField = $this->fieldMappings['id'];
+                unset($this->fieldMappings['id']);
+                $this->fieldMappings = array_merge(['id'=>$idField], $this->fieldMappings);
+            }
+        }
         return $this->fieldMappings;
     }
     /**

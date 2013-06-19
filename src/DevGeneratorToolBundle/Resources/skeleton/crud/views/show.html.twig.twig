@@ -5,18 +5,17 @@
 
 {{ "{% set crud_path_edit=path('" ~ route_name_prefix ~ "_edit', {'id': entity.id}) %}" }}
 {{ "{% set crud_path_delete=path('" ~ route_name_prefix ~ "_delete', {'id': entity.id}) %}" }}
-{{ "{% set delete_message='Do you really want to delete this " ~ entity ~ "?' %}" }}
+{{ "{% set delete_message='Do you really want to delete this %entity%?'|trans({'%entity%': '" ~ entity ~ "'}) %}" }}
 
-{{ "{% block action_title %}<h3>" ~ entity ~ " show {{ entity.id|type_id }}</h3>{% endblock %}" }}
+{{ "{% block action_title %}<h3>{{ 'Show %entity% %id%'|trans({'%entity%':'" ~ entity ~ "', '%id%':entity.id|type_id}) }}</h3>{% endblock %}" }}
 
-{{ "{% set translationDomain = '" ~ entity ~ "_entity' %}" }}
 {{ "{% block table_body %}" }}
 {% for field, metadata in fields %}
     <tr>
         {% if field in ['id'] %}
-<th>{{ "{{ '" ~ field ~ "'|trans({}, 'messages')  }}" }}</th>
+<th>{{ "{{ '" ~ field ~ "'|trans() }}" }}</th>
 {% else %}
-<th>{{ "{{ '" ~ field ~ "'|trans({}, translationDomain)  }}" }}</th>
+<th>{{ "{{ '" ~ field ~ "'|trans({}, 'entity_" ~ entity~ "') }}" }}</th>
 {% endif %}
         <td>{% spaceless %}
             {% if metadata.type in ['date', 'datetime'] %}
