@@ -23,7 +23,7 @@
         ];
 
         $gridBuilder
-            ->setGridId('user')
+            ->setGridId('{{ entity }}')
             ->setExports(['CSV', 'Excel', 'XML'])
             ->addCreateControll('{{ route_prefix }}_new')
             ->setRouteUrl($this->generateUrl('{{ route_prefix }}_list'))
