@@ -2,11 +2,10 @@
 
 namespace {{ namespace }}\Controller{{ entity_namespace ? '\\' ~ entity_namespace : '' }};
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 {% if 'new' in actions or 'edit' in actions or 'delete' in actions %}
 use Symfony\Component\HttpFoundation\Request;
-{%- endif %}
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+{%   endif %}
 use {{ coreBundleNs }}\Controller\BaseController;
 {% if 'annotation' == format -%}
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -14,13 +13,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 {%- endif %}
 
-use {{ namespace }}\Entity\{{ entity }};
+use {{ coreBundleNs }}\Entity\{{ entity }};
 {% if 'new' in actions or 'edit' in actions %}
 use {{ namespace }}\Form\Type\{{ entity }}FormType;
 {% endif %}
 
 use APY\DataGridBundle\Grid\Action\DeleteMassAction;
-use LP\CoreBundle\Grid\GridBuilder;
+use {{ coreBundleNs }}\Grid\GridBuilder;
 
 /**
  * {{ entity }} controller.

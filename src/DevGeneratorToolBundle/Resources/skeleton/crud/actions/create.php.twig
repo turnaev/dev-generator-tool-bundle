@@ -3,7 +3,7 @@
      * Creates a new {{ entity }} entity.
      *
 {% if 'annotation' == format %}
-     * @Route("/", name="{{ route_name_prefix }}_create")
+     * @Route("/", name="{{ route_name_prefix }}.create")
      * @Method("POST")
      * @Template("{{ bundle }}:{{ entity }}:new.html.twig")
 {% endif %}
@@ -20,7 +20,7 @@
             $em->flush();
 
             {% if 'show' in actions -%}
-                return $this->redirect($this->generateUrl('{{ route_name_prefix }}_show', ['id' => $entity->getId()]));
+                return $this->redirect($this->generateUrl('{{ route_name_prefix }}.show', ['id' => $entity->getId()]));
             {%- else -%}
                 return $this->redirect($this->generateUrl('{{ route_name_prefix }}'));
             {%- endif %}
@@ -33,7 +33,7 @@
             'form'   => $form->createView(),
         ];
 {% else %}
-        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:Crud/new.html.twig', [
+        return $this->render('{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/new.html.twig', [
             'entity' => $entity,
             'form'   => $form->createView(),
         ]);

@@ -17,6 +17,14 @@ class DoctrineFormGenerator extends Generator
     private $skeletonDir;
     private $className;
     private $classPath;
+    protected $src;
+
+    /**
+     * @param string $src
+     */
+    public function setSrc($src) {
+        $this->src = $src;
+    }
 
     public function __construct(Filesystem $filesystem, $skeletonDir)
     {
@@ -43,11 +51,14 @@ class DoctrineFormGenerator extends Generator
      */
     public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata)
     {
+        if(is_null($this->src)) {
+            $this->src = $bundle->getPath();
+        }
         $parts       = explode('\\', $entity);
         $entityClass = array_pop($parts);
 
         $this->className = $entityClass;
-        $dirPath         = $bundle->getPath().'/Form/Type';
+        $dirPath         = $this->src.'/Form/Type';
         $this->classPath = $dirPath.'/'.str_replace('\\', '/', $entity).'FormType.php';
 
         if (file_exists($this->classPath)) {

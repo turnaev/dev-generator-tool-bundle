@@ -301,11 +301,6 @@ EOT
         }
 
         $output->write('Importing the bundle routing resource: ');
-
-        //added to main routing
-        //$routing = new RoutingManipulator($this->getContainer()->getParameter('kernel.root_dir').'/config/routing.yml');
-
-        //added to admin bundle routing
         $routing = new RoutingManipulator($this->getContainer()->getParameter('kernel.root_dir').'/../src/'.$coreBundlePath.'/Resources/config/routing.xml');
 
         try {

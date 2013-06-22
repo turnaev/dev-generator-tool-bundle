@@ -3,7 +3,7 @@
      * Displays a form to edit an existing {{ entity }} entity.
      *
 {% if 'annotation' == format %}
-     * @Route("/{id}/edit", name="{{ route_name_prefix }}_edit")
+     * @Route("/{id}/edit", name="{{ route_name_prefix }}.edit")
      * @Method("GET")
      * @Template()
 {% endif %}
@@ -28,7 +28,7 @@
             'delete_form' => $deleteForm->createView(),
         ];
 {% else %}
-        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:Crud/edit.html.twig', [
+        return $this->render('{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/edit.html.twig', [
             'entity'      => $entity,
             'form'        => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),

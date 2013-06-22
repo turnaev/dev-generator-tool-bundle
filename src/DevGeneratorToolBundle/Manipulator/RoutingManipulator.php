@@ -37,7 +37,6 @@ class RoutingManipulator extends Manipulator
      */
     public function addResource($bundle, $format, $prefix = '/', $path = 'routing')
     {
-w($this->file);
         $current = '';
         if (file_exists($this->file)) {
             $current = file_get_contents($this->file);

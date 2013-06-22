@@ -3,7 +3,7 @@
      * Displays a form to create a new {{ entity }} entity.
      *
 {% if 'annotation' == format %}
-     * @Route("/new", name="{{ route_name_prefix }}_new")
+     * @Route("/new", name="{{ route_name_prefix }}.new")
      * @Method("GET")
      * @Template()
 {% endif %}
@@ -19,7 +19,7 @@
             'form'   => $form->createView(),
         ];
 {% else %}
-        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:Crud/new.html.twig', [
+        return $this->render('{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/new.html.twig', [
             'entity' => $entity,
             'form'   => $form->createView(),
         ]);

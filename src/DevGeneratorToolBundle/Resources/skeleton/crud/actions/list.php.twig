@@ -25,12 +25,12 @@
         $gridBuilder
             ->setGridId('{{ entity }}')
             ->setExports(['CSV', 'Excel', 'XML'])
-            ->addCreateControll('{{ route_prefix }}_new')
-            ->setRouteUrl($this->generateUrl('{{ route_prefix }}_list'))
+            ->addCreateControll('{{ route_prefix }}.new')
+            ->setRouteUrl($this->generateUrl('{{ route_prefix }}.list'))
             ->setSource('{{ bundle }}:{{ entity }}', $columns)
             ->setRowActions([
-                [null, '{{ route_prefix }}_show', false, '_self', ['icon'=>'icon-eye-open', 'title'=>'Detail']],
-                [null, '{{ route_prefix }}_edit', false, '_self', ['icon'=>'icon-edit', 'title'=>'Edit']],
+                [null, '{{ route_prefix }}.show', false, '_self', ['icon'=>'icon-eye-open', 'title'=>'Detail']],
+                [null, '{{ route_prefix }}.edit', false, '_self', ['icon'=>'icon-edit', 'title'=>'Edit']],
             ]);
 
             $massActionDelete = new DeleteMassAction(true);
@@ -40,6 +40,6 @@
                 $massActionDelete
             ]);
 
-        return $gridBuilder->getGridResponse('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:Crud/list.html.twig');
+        return $gridBuilder->getGridResponse('{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/list.html.twig');
     }
 

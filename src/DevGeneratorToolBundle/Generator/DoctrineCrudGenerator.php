@@ -22,6 +22,24 @@ class DoctrineCrudGenerator extends Generator
     protected $format;
     protected $actions;
     protected $coreBundleNs;
+    protected $src;
+    protected $outputBundle;
+
+    /**
+     * @param mixed $outputBundle
+     */
+    public function setOutputBundle($outputBundle)
+    {
+        $this->outputBundle = $outputBundle;
+    }
+
+    /**
+     * @param string $src
+     */
+    public function setSrc($src) {
+        $this->src = $src;
+    }
+
 
     public function setCoreBundleNs($coreBundlePath)
     {
@@ -54,6 +72,7 @@ class DoctrineCrudGenerator extends Generator
      */
     public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata, $format, $routePrefix, $needWriteActions, $forceOverwrite)
     {
+
         $this->routePrefix = $routePrefix;
         $this->routeNamePrefix = str_replace('/', '_', $routePrefix);
         $this->actions = $needWriteActions ? array('list', 'show', 'new', 'edit', 'delete') : array('list', 'show');
@@ -71,9 +90,17 @@ class DoctrineCrudGenerator extends Generator
         $this->metadata = $metadata;
         $this->setFormat($format);
 
+        if(is_null($this->src)) {
+            $this->src = $this->bundle->getPath();
+        }
+
+        if(is_null($this->outputBundle)) {
+            $this->outputBundle = $this->bundle->getName();
+        }
+
         $this->generateControllerClass($forceOverwrite);
 
-        $dirViews = sprintf('%s/Resources/views/%s', $this->bundle->getPath(), str_replace('\\', '/', $this->entity));
+        $dirViews = sprintf('%s/Resources/views/%s', $this->src, str_replace('\\', '/', $this->entity));
         if (!file_exists($dirViews)) {
             $this->filesystem->mkdir($dirViews, 0777);
         }
@@ -91,7 +118,7 @@ class DoctrineCrudGenerator extends Generator
             $this->generateEditView($dirViews);
         }
 
-        $this->generateTranslation(sprintf('%s/Resources/translations', $this->bundle->getPath()));
+        $this->generateTranslation(sprintf('%s/Resources/translations', $this->src));
 
         $this->generateTestClass();
         $this->generateConfiguration();
@@ -127,20 +154,29 @@ class DoctrineCrudGenerator extends Generator
             return;
         }
 
+        $name = str_replace('\\', '_', $this->entity);
+        $name = preg_replace('/(.)([A-Z])/', '\1-\2', $name);
+        $name = strtolower($name);
+
         $target = sprintf(
             '%s/Resources/config/routing/%s.%s',
-            $this->bundle->getPath(),
-            strtolower(str_replace('\\', '_', $this->entity)),
+            $this->src,
+            $name,
             $this->format
         );
 
-        $this->renderFile($this->skeletonDir, 'config/routing.'.$this->format.'.twig', $target, array(
+
+        $baseNs = explode('\\', $this->coreBundleNs)[0];
+
+        $options = [
             'actions'           => $this->actions,
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
-            'bundle'            => $this->bundle->getName(),
+            'bundle'            => $baseNs.$this->outputBundle,
             'entity'            => $this->entity,
-        ));
+        ];
+
+        $this->renderFile($this->skeletonDir, 'config/routing.'.$this->format.'.twig', $target, $options);
     }
 
     /**
@@ -149,11 +185,13 @@ class DoctrineCrudGenerator extends Generator
      */
     protected function generateControllerClass($forceOverwrite)
     {
-        $dir = $this->bundle->getPath();
+        $dir = $this->src;
 
         $parts = explode('\\', $this->entity);
         $entityClass = array_pop($parts);
         $entityNamespace = implode('\\', $parts);
+
+        $baseNs = explode('\\', $this->coreBundleNs)[0];
 
         $target = sprintf(
             '%s/Controller/%s/%sController.php',
@@ -173,21 +211,24 @@ class DoctrineCrudGenerator extends Generator
             $maxColumnNameSize = max($maxColumnNameSize, $fieldMapping['columnNameSize']);
         }
 
-        $this->renderFile($this->skeletonDir, 'controller.php.twig', $target, array(
-            'actions'           => $this->actions,
-            'route_prefix'      => $this->routePrefix,
-            'route_name_prefix' => $this->routeNamePrefix,
-            'dir'               => $this->skeletonDir,
-            'bundle'            => $this->bundle->getName(),
-            'entity'            => $this->entity,
-            'fields'            => $fieldMappings,
-            'entity_class'      => $entityClass,
-            'namespace'         => $this->bundle->getNamespace(),
-            'entity_namespace'  => $entityNamespace,
-            'format'            => $this->format,
-            'coreBundleNs'      => $this->coreBundleNs,
-            'maxColumnNameSize' => $maxColumnNameSize,
-        ));
+        $options= [
+
+                'actions'           => $this->actions,
+                'route_prefix'      => $this->routePrefix,
+                'route_name_prefix' => $this->routeNamePrefix,
+                'dir'               => $this->skeletonDir,
+                'bundle'            => $this->bundle->getName(),
+                'entity'            => $this->entity,
+                'fields'            => $fieldMappings,
+                'entity_class'      => $entityClass,
+                'namespace'         => $baseNs.'\\'.$this->outputBundle,
+                'entity_namespace'  => $entityNamespace,
+                'format'            => $this->format,
+                'coreBundleNs'      => $this->coreBundleNs,
+                'maxColumnNameSize' => $maxColumnNameSize,
+        ];
+
+        $this->renderFile($this->skeletonDir, 'controller.php.twig', $target, $options);
     }
 
     /**
@@ -200,7 +241,7 @@ class DoctrineCrudGenerator extends Generator
         $entityClass = array_pop($parts);
         $entityNamespace = implode('\\', $parts);
 
-        $dir    = $this->bundle->getPath() .'/Tests/Controller';
+        $dir    = $this->src .'/Tests/Controller';
         $target = $dir .'/'. str_replace('\\', '/', $entityNamespace).'/'. $entityClass .'ControllerTest.php';
 
         $this->renderFile($this->skeletonDir, 'tests/test.php.twig', $target, array(

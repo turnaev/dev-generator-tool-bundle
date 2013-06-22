@@ -21,6 +21,8 @@ class GenerateDoctrineCrudCommand extends GenerateDoctrineCommand
 {
     private $generator;
     private $formGenerator;
+    private $src;
+    private $outputBundle;
 
     /**
      * @see Command
@@ -34,6 +36,9 @@ class GenerateDoctrineCrudCommand extends GenerateDoctrineCommand
                 new InputOption('with-write', '', InputOption::VALUE_NONE, 'Whether or not to generate create, new and delete actions'),
                 new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)', 'annotation'),
                 new InputOption('overwrite', '', InputOption::VALUE_NONE, 'Do not stop the generation if crud controller already exist, thus overwriting all generated files'),
+                new InputOption('src', '', InputOption::VALUE_REQUIRED, 'output dir'),
+                new InputOption('output-bundle', '', InputOption::VALUE_REQUIRED, 'output bundle'),
+
             ))
             ->setDescription('Generates a CRUD based on a Doctrine entity')
             ->setHelp(<<<EOT
@@ -44,6 +49,10 @@ The default command only generates the list and show actions.
 <info>php app/console tool-dev:generate:crud --entity=AcmeBlogBundle:Post --route-prefix=post_admin</info>
 
 Using the --with-write option allows to generate the new, edit and delete actions.
+
+Using the --src option set output dir generated code exempale --src='./output' default output to ./AcmeBlogBundle
+
+Using the --output-bundle' option set output output-bundle' generated code exempale --output-bundle='CoreBlogBundle' default output to AcmeBlogBundle
 
 <info>php app/console tool-dev:generate:crud --entity=AcmeBlogBundle:Post --route-prefix=post_admin --with-write</info>
 EOT
@@ -57,6 +66,15 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if($input->getOption('src')) {
+            $this->src = $input->getOption('src');
+        }
+
+        if($input->getOption('output-bundle')) {
+            $this->outputBundle = $input->getOption('output-bundle');
+        }
+
+
         $dialog = $this->getDialogHelper();
 
         if ($input->isInteractive()) {
@@ -82,6 +100,8 @@ EOT
         $bundle      = $this->getContainer()->get('kernel')->getBundle($bundle);
 
         $generator = $this->getGenerator();
+        $generator->setSrc($this->src);
+        $generator->setOutputBundle($this->outputBundle);
         $generator->generate($bundle, $entity, $metadata[0], $format, $prefix, $withWrite, $forceOverwrite);
 
         $output->writeln('Generating the CRUD code: <info>OK</info>');
@@ -178,7 +198,9 @@ EOT
     protected function generateForm($bundle, $entity, $metadata)
     {
         try {
-            $this->getFormGenerator()->generate($bundle, $entity, $metadata[0]);
+            $generator = $this->getFormGenerator();
+            $generator->setSrc($this->src);
+            $generator->generate($bundle, $entity, $metadata[0]);
         } catch (\RuntimeException $e ) {
             // form already exists
         }
@@ -186,28 +208,42 @@ EOT
 
     protected function updateRouting($dialog, InputInterface $input, OutputInterface $output, $bundle, $format, $entity, $prefix)
     {
+        $prefix = $this->getMainRoutePrefix($input, $entity);
+
         $auto = true;
         if ($input->isInteractive()) {
             $auto = $dialog->askConfirmation($output, $dialog->getQuestion('Confirm automatic update of the Routing', 'yes', '?'), true);
         }
 
         $output->write('Importing the CRUD routes: ');
-        $this->getContainer()->get('filesystem')->mkdir($bundle->getPath().'/Resources/config/');
-        $routing = new RoutingManipulator($bundle->getPath().'/Resources/config/routing.xml');
+        $this->getContainer()->get('filesystem')->mkdir($this->src.'/Resources/config/');
+        $routing = new RoutingManipulator($this->src.'/Resources/config/routing.xml');
+
+        $routeName = str_replace('\\', '_', $entity);
+        $routeName = preg_replace('/(.)([A-Z])/', '\1-\2', $routeName);
+        $routeName = strtolower($routeName);
+
+
+        $coreBundlePath = $this->getContainer()->getParameter('dev_generator_tool.coreBundleNs');
+        $baseNs = explode('\\', $coreBundlePath)[0];
+
+        $bundleName = $baseNs.$this->outputBundle;
 
         try {
-            $ret = $auto ? $routing->addResource($bundle->getName(), $format, '/'.$prefix, 'routing/'.strtolower(str_replace('\\', '_', $entity))) : false;
+            $ret = $auto ? $routing->addResource($bundleName, $format, '/'.$prefix, 'routing/'.$routeName) : false;
+
         } catch (\RuntimeException $exc) {
             $ret = false;
         }
 
         if (!$ret) {
-            $help = sprintf("        <comment>resource: \"@%s/Resources/config/routing/%s.%s\"</comment>\n", $bundle->getName(), strtolower(str_replace('\\', '_', $entity)), $format);
+
+            $help = sprintf("        <comment>resource: \"@%s/Resources/config/routing/%s.%s\"</comment>\n", $bundle->getName(), $routeName, $format);
             $help .= sprintf("        <comment>prefix:   /%s</comment>\n", $prefix);
 
             return array(
                 '- Import the bundle\'s routing resource in the bundle routing file',
-                sprintf('  (%s).', $bundle->getPath().'/Resources/config/routing.yml'),
+                sprintf('  (%s).', $this->src.'/Resources/config/routing.yml'),
                 '',
                 sprintf('    <comment>%s:</comment>', $bundle->getName().('' !== $prefix ? '_'.str_replace('/', '_', $prefix) : '')),
                 $help,
@@ -215,6 +251,20 @@ EOT
             );
         }
     }
+
+    protected function getMainRoutePrefix(InputInterface $input, $entity)
+    {
+        $routeName = str_replace('\\', '_', $entity);
+        $routeName = preg_replace('/(.)([A-Z])/', '\1-\2', $routeName);
+        $prefix = strtolower($routeName);
+
+        if ($prefix && '/' === $prefix[0]) {
+            $prefix = substr($prefix, 1);
+        }
+
+        return $prefix;
+    }
+
 
     protected function getRoutePrefix(InputInterface $input, $entity)
     {

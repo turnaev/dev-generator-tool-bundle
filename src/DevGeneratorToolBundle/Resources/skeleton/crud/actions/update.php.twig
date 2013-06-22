@@ -3,7 +3,7 @@
      * Edits an existing {{ entity }} entity.
      *
 {% if 'annotation' == format %}
-     * @Route("/{id}", name="{{ route_name_prefix }}_update")
+     * @Route("/{id}", name="{{ route_name_prefix }}.update")
      * @Method("PUT")
      * @Template("{{ bundle }}:{{ entity }}:edit.html.twig")
 {% endif %}
@@ -26,7 +26,7 @@
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('{{ route_name_prefix }}_edit', ['id' => $id]));
+            return $this->redirect($this->generateUrl('{{ route_name_prefix }}.edit', ['id' => $id]));
         }
 
 {% if 'annotation' == format %}
@@ -36,7 +36,7 @@
             'delete_form' => $deleteForm->createView(),
         ];
 {% else %}
-        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:Crud/edit.html.twig', [
+        return $this->render('{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/edit.html.twig', [
             'entity'      => $entity,
             'form'        => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),

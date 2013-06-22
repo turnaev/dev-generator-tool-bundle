@@ -3,7 +3,7 @@
      * Finds and displays a {{ entity }} entity.
      *
 {% if 'annotation' == format %}
-     * @Route("/{id}", name="{{ route_name_prefix }}_show")
+     * @Route("/{id}", name="{{ route_name_prefix }}.show")
      * @Method("GET")
      * @Template()
 {% endif %}
@@ -30,7 +30,7 @@
 {% endif %}
         ];
 {% else %}
-        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:Crud/show.html.twig', [
+        return $this->render('{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/show.html.twig', [
             'entity'      => $entity,
 {% if 'delete' in actions %}
             'delete_form' => $deleteForm->createView(),

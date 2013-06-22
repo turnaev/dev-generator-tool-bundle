@@ -1,10 +1,10 @@
 {{ "{% extends '::Crud/edit.html.twig' %}" }}
 
-{{ "{%  set crud_path_new=path('" ~ route_name_prefix ~ "_new') %}" }}
-{{ "{%  set crud_path_list=path('" ~ route_name_prefix ~ "_list') %}" }}
-{{ "{%  set crud_path_show=path('" ~ route_name_prefix ~ "_show', { 'id': entity.id }) %}" }}
-{{ "{%  set crud_path_update=path('" ~ route_name_prefix ~ "_update', { 'id': entity.id }) %}" }}
-{{ "{%  set crud_path_delete=path('" ~ route_name_prefix ~ "_delete', { 'id': entity.id }) %}" }}
+{{ "{%  set crud_path_new=path('" ~ route_name_prefix ~ ".new') %}" }}
+{{ "{%  set crud_path_list=path('" ~ route_name_prefix ~ ".list') %}" }}
+{{ "{%  set crud_path_show=path('" ~ route_name_prefix ~ ".show', { 'id': entity.id }) %}" }}
+{{ "{%  set crud_path_update=path('" ~ route_name_prefix ~ ".update', { 'id': entity.id }) %}" }}
+{{ "{%  set crud_path_delete=path('" ~ route_name_prefix ~ ".delete', { 'id': entity.id }) %}" }}
 {{ "{% set delete_message= 'Do you really want to delete this %entity%?'|trans({'%entity%': '" ~ entity ~ "'}) %}" }}
 
 {{ "{% block action_title %}<h3>{{ 'Edit %entity% %id%'|trans({'%entity%':'" ~ entity ~ "', '%id%':entity.id|type_id})  }}</h3>{% endblock %}" }}
