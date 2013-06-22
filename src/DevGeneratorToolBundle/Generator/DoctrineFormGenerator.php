@@ -18,6 +18,15 @@ class DoctrineFormGenerator extends Generator
     private $className;
     private $classPath;
     protected $src;
+    protected $outputBundle;
+
+    /**
+     * @param mixed $outputBundle
+     */
+    public function setOutputBundle($outputBundle)
+    {
+        $this->outputBundle = $outputBundle;
+    }
 
     /**
      * @param string $src
@@ -54,6 +63,15 @@ class DoctrineFormGenerator extends Generator
         if(is_null($this->src)) {
             $this->src = $bundle->getPath();
         }
+
+        if(is_null($this->outputBundle)) {
+            $this->outputBundle = $bundle->getName();
+        }
+
+        $baseNS = explode('\\', $bundle->getNamespace())[0];
+        $bundleNamespaceTarget = $baseNS.'\\'.$this->outputBundle;
+
+
         $parts       = explode('\\', $entity);
         $entityClass = array_pop($parts);
 
@@ -82,6 +100,7 @@ class DoctrineFormGenerator extends Generator
             'dir'              => $this->skeletonDir,
             'fields'           => $fields,
             'namespace'        => $bundle->getNamespace(),
+            'bundel_namespace_target'   => $bundleNamespaceTarget,
             'entity_namespace' => implode('\\', $parts),
             'entity_class'     => $entityClass,
             'form_class'       => $this->className.'FormType',
