@@ -8,11 +8,12 @@
      * @Template("{{ bundle }}:{{ entity }}:new.html.twig")
 {% endif %}
      */
-    public function createAction(Request $request)
+    public function createAction()
     {
         $entity  = new {{ entity_class }}();
         $form = $this->createForm(new {{ entity_class }}FormType(), $entity);
-        $form->submit($request);
+
+        $form->handleRequest($this->getRequest());
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

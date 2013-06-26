@@ -105,7 +105,7 @@ class DoctrineFormGenerator extends Generator
             'entity_class'     => $entityClass,
             'form_class'       => $this->className.'FormType',
             'form_label'       => $entityClass,
-            'form_type_name'   => strtolower(str_replace('\\', '_', $bundle->getNamespace()).($parts ? '_' : '').implode('_', $parts).'_'.$this->className),
+            'form_type_name'   => 'form'.$entityClass,
             'maxColumnNameSize' => $maxColumnNameSize,
         ));
     }

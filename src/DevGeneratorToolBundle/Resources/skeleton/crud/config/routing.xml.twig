@@ -9,10 +9,6 @@
     </route>
 
     {% if 'new' in actions %}
-    <route id="{{ route_name_prefix }}.new" pattern="/new">
-        <default key="_controller">{{ bundle }}:{{ entity }}:new</default>
-    </route>
-
     <route id="{{ route_name_prefix }}.create" pattern="/create">
         <default key="_controller">{{ bundle }}:{{ entity }}:create</default>
         <requirement key="_method">post</requirement>
@@ -27,12 +23,6 @@
 {% if 'edit' in actions %}
     <route id="{{ route_name_prefix }}.edit" pattern="/{id}/edit">
         <default key="_controller">{{ bundle }}:{{ entity }}:edit</default>
-        <requirement key="id">\d+</requirement>
-    </route>
-
-    <route id="{{ route_name_prefix }}.update" pattern="/{id}/update">
-        <default key="_controller">{{ bundle }}:{{ entity }}:update</default>
-        <requirement key="_method">post|put</requirement>
         <requirement key="id">\d+</requirement>
     </route>
 {% endif %}

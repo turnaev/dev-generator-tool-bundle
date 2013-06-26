@@ -19,21 +19,20 @@
         }
 {% if 'delete' in actions %}
 
-        $deleteForm = $this->createDeleteForm($id);
 {% endif %}
 
 {% if 'annotation' == format %}
         return [
             'entity'      => $entity,
 {% if 'delete' in actions %}
-            'delete_form' => $deleteForm->createView(),
+            'delete_form' => $this->createDeleteForm($id)->createView(),
 {% endif %}
         ];
 {% else %}
         return $this->render('{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/show.html.twig', [
             'entity'      => $entity,
 {% if 'delete' in actions %}
-            'delete_form' => $deleteForm->createView(),
+            'delete_form' => $this->createDeleteForm($id)->createView(),
 {% endif %}
         ]);
 {% endif %}

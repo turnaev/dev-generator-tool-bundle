@@ -1,9 +1,9 @@
 {{ "{% extends '::Crud/edit.html.twig' %}" }}
 
-{{ "{%  set crud_path_new=path('" ~ route_name_prefix ~ ".new') %}" }}
+{{ "{%  set crud_path_create=path('" ~ route_name_prefix ~ ".create') %}" }}
 {{ "{%  set crud_path_list=path('" ~ route_name_prefix ~ ".list') %}" }}
 {{ "{%  set crud_path_show=path('" ~ route_name_prefix ~ ".show', { 'id': entity.id }) %}" }}
-{{ "{%  set crud_path_update=path('" ~ route_name_prefix ~ ".update', { 'id': entity.id }) %}" }}
+{{ "{%  set crud_path_edit=path('" ~ route_name_prefix ~ ".edit', { 'id': entity.id }) %}" }}
 {{ "{%  set crud_path_delete=path('" ~ route_name_prefix ~ ".delete', { 'id': entity.id }) %}" }}
 {{ "{% set delete_message= 'Do you really want to delete this %entity%?'|trans({'%entity%': '" ~ entity ~ "'}) %}" }}
 

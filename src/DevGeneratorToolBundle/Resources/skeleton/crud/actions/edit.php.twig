@@ -18,20 +18,28 @@
             throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
         }
 
-        $editForm = $this->createForm(new {{ entity_class }}FormType(), $entity);
-        $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createForm(new {{ entity_class }}FormType(), $entity, ['method'=>'PUT']);
+
+        $editForm->handleRequest($this->getRequest());
+
+        if ($editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($entity);
+            $em->flush();
+            return $this->redirect($this->generateUrl('{{ route_name_prefix }}.show', ['id' => $entity->getId()]));
+        }
 
 {% if 'annotation' == format %}
         return [
             'entity'      => $entity,
             'form'        => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'delete_form' => $this->createDeleteForm($id)->createView(),
         ];
 {% else %}
         return $this->render('{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/edit.html.twig', [
             'entity'      => $entity,
             'form'        => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'delete_form' => $this->createDeleteForm($id)->createView(),
         ]);
 {% endif %}
     }

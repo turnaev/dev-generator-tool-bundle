@@ -25,7 +25,7 @@
         $gridBuilder
             ->setGridId('{{ entity }}')
             ->setExports(['CSV', 'Excel', 'XML'])
-            ->addCreateControll('{{ route_prefix }}.new')
+            ->addCreateControll('{{ route_prefix }}.create')
             ->setRouteUrl($this->generateUrl('{{ route_prefix }}.list'))
             ->setSource('{{ bundle }}:{{ entity }}', $columns)
             ->setRowActions([

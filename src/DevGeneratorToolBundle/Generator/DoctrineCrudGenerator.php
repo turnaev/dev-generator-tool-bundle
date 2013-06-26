@@ -398,7 +398,7 @@ class DoctrineCrudGenerator extends Generator
      */
     protected function generateNewView($dir)
     {
-        $this->renderFile($this->skeletonDir, 'views/new.html.twig.twig', $dir.'/Crud/new.html.twig', array(
+        $this->renderFile($this->skeletonDir, 'views/create.html.twig.twig', $dir.'/Crud/create.html.twig', array(
             'dir'               => $this->skeletonDir,
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
