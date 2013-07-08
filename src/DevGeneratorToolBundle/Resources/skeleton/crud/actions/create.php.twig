@@ -34,7 +34,7 @@
             'form'   => $form->createView(),
         ];
 {% else %}
-        return $this->render('{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/new.html.twig', [
+        return $this->render('{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/create.html.twig', [
             'entity' => $entity,
             'form'   => $form->createView(),
         ]);

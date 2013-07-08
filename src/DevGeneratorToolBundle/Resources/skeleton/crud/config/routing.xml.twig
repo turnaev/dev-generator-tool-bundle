@@ -9,7 +9,7 @@
     </route>
 
     {% if 'new' in actions %}
-    <route id="{{ route_name_prefix }}.create" pattern="/create">
+<route id="{{ route_name_prefix }}.create" pattern="/create">
         <default key="_controller">{{ bundle }}:{{ entity }}:create</default>
     </route>
     {% endif %}
