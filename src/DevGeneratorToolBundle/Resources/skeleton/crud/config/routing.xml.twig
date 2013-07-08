@@ -11,7 +11,6 @@
     {% if 'new' in actions %}
     <route id="{{ route_name_prefix }}.create" pattern="/create">
         <default key="_controller">{{ bundle }}:{{ entity }}:create</default>
-        <requirement key="_method">post</requirement>
     </route>
     {% endif %}
 
