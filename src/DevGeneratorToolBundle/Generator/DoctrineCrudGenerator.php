@@ -312,7 +312,12 @@ class DoctrineCrudGenerator extends Generator
             }
 
             ksort($translationsArr);
-            $translationsYml = \Symfony\Component\Yaml\Yaml::dump($translationsArr);
+            if($translationsArr) {
+                $translationsYml = \Symfony\Component\Yaml\Yaml::dump($translationsArr);
+            } else {
+                $translationsYml = '';
+            }
+
 
             file_put_contents($file, $comments.$translationsYml);
         }
