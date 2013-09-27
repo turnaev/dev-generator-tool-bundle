@@ -1,7 +1,7 @@
 
     /**
      * List all {{ entity }} entities.
-     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function listAction()
     {
@@ -23,7 +23,7 @@
         ];
 
         $gridBuilder
-            ->setGridId('{{ entity }}')
+            ->setGridId('{{ route_name_entity }}')
             ->setExports(['CSV', 'Excel', 'XML'])
             ->addCreateControll('{{ route_prefix }}.create')
             ->setRouteUrl($this->generateUrl('{{ route_prefix }}.list'))
@@ -40,6 +40,13 @@
                 $massActionDelete
             ]);
 
-        return $gridBuilder->getGridResponse('{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/list.html.twig');
-    }
+        $this->initBreadcrumb();
 
+        return $gridBuilder->getGridResponse(
+            '{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/list.html.twig', [
+                'with_ajax'    => true,
+                'context_menu' => $this->get('menu.builder')
+                                       ->createContextMenu('{{ route_name_entity }}')
+            ]
+        );
+    }

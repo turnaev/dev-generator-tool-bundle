@@ -7,7 +7,7 @@
 {{ "{% set crud_path_delete=path('" ~ route_name_prefix ~ ".delete', {'id': entity.id}) %}" }}
 {{ "{% set delete_message='Do you really want to delete this %entity%?'|trans({'%entity%': '" ~ entity ~ "'}) %}" }}
 
-{{ "{% block action_title %}<h3>{{ 'Show %entity% %id%'|trans({'%entity%':'" ~ entity ~ "', '%id%':entity.id|type_id}) }}</h3>{% endblock %}" }}
+{{ "{% block action_title %}{{ '%entity% %id%'|trans({'%entity%':'" ~ entity ~ "', '%id%':entity.id|type_id}) }}{% endblock %}" }}
 
 {{ "{% block table_body %}" }}
 {% for field, metadata in fields %}

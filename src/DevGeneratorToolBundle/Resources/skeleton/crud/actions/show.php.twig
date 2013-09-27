@@ -1,7 +1,9 @@
 
     /**
      * Finds and displays a {{ entity }} entity.
-     *
+     * @param integer $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
 {% if 'annotation' == format %}
      * @Route("/{id}", name="{{ route_name_prefix }}.show")
      * @Method("GET")
@@ -17,9 +19,11 @@
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
         }
-{% if 'delete' in actions %}
 
-{% endif %}
+        $this->initBreadcrumb()
+             ->addItem('Show %entity%',
+                       $this->generateUrl('{{ route_name_prefix }}.show', ['id' => $entity->getId()]),
+                       ['%entity%' => '{{ entity }}']);
 
 {% if 'annotation' == format %}
         return [
@@ -29,11 +33,14 @@
 {% endif %}
         ];
 {% else %}
-        return $this->render('{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/show.html.twig', [
-            'entity'      => $entity,
+        return $this->render(
+            '{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/show.html.twig', [
+                'entity'       => $entity,
 {% if 'delete' in actions %}
-            'delete_form' => $this->createDeleteForm($id)->createView(),
+                'delete_form'  => $this->createDeleteForm($id)->createView(),
 {% endif %}
+                'context_menu' => $this->get('menu.builder')
+                                       ->createContextMenu('{{ route_name_entity }}', $entity)
         ]);
 {% endif %}
     }

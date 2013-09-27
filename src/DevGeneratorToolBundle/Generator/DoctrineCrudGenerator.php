@@ -216,6 +216,7 @@ class DoctrineCrudGenerator extends Generator
                 'actions'           => $this->actions,
                 'route_prefix'      => $this->routePrefix,
                 'route_name_prefix' => $this->routeNamePrefix,
+                'route_name_entity' => preg_replace('/^.*?\./', '',  $this->routePrefix),
                 'dir'               => $this->skeletonDir,
                 'bundle'            => $this->bundle->getName(),
                 'entity'            => $this->entity,

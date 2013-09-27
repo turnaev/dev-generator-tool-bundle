@@ -1,7 +1,9 @@
 
     /**
      * Displays a form to edit an existing {{ entity }} entity.
-     *
+     * @param integer $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
 {% if 'annotation' == format %}
      * @Route("/{id}/edit", name="{{ route_name_prefix }}.edit")
      * @Method("GET")
@@ -10,8 +12,7 @@
      */
     public function editAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
-
+        $em     = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
 
         if (!$entity) {
@@ -19,7 +20,6 @@
         }
 
         $editForm = $this->createForm(new {{ entity_class }}FormType(), $entity, ['method'=>'PUT']);
-
         $editForm->handleRequest($this->getRequest());
 
         if ($editForm->isValid()) {
@@ -29,17 +29,29 @@
             return $this->redirect($this->generateUrl('{{ route_name_prefix }}.show', ['id' => $entity->getId()]));
         }
 
+        $this->initBreadcrumb()
+             ->addItem('Edit %entity%',
+                       $this->generateUrl('{{ route_name_prefix }}.edit', ['id' => $entity->getId()]),
+                       ['%entity%' => '{{ entity }}']);
+
 {% if 'annotation' == format %}
         return [
             'entity'      => $entity,
             'form'        => $editForm->createView(),
+{% if 'delete' in actions %}
             'delete_form' => $this->createDeleteForm($id)->createView(),
-        ];
+{% endif %}
+    ];
 {% else %}
-        return $this->render('{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/edit.html.twig', [
-            'entity'      => $entity,
-            'form'        => $editForm->createView(),
-            'delete_form' => $this->createDeleteForm($id)->createView(),
+        return $this->render(
+            '{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/edit.html.twig', [
+                'entity'       => $entity,
+                'form'         => $editForm->createView(),
+{% if 'delete' in actions %}
+                'delete_form'  => $this->createDeleteForm($id)->createView(),
+{% endif %}
+                'context_menu' => $this->get('menu.builder')
+                                       ->createContextMenu('{{ route_name_entity }}', $entity)
         ]);
 {% endif %}
     }
