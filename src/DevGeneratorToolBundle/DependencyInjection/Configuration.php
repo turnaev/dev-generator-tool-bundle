@@ -27,6 +27,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('web_path')->defaultValue('LP/WebBundle')->end()
                     ->end()
                 ->end()
+            ->scalarNode('generate_translation')->defaultValue(false)->end()
             ->end()
         ;
 

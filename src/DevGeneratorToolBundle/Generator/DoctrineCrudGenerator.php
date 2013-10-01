@@ -40,12 +40,17 @@ class DoctrineCrudGenerator extends Generator
         $this->src = $src;
     }
 
-
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+     */
     public function setContainer(\Symfony\Component\DependencyInjection\ContainerInterface $container)
     {
         $this->container = $container;
     }
 
+    /**
+     * @return \Symfony\Component\DependencyInjection\ContainerInterface $container
+     */
     public function getContainer()
     {
         return $this->container;
@@ -123,7 +128,9 @@ class DoctrineCrudGenerator extends Generator
             $this->generateEditView($dirViews);
         }
 
-        $this->generateTranslation(sprintf('%s/Resources/translations', $this->src));
+        if($this->getContainer()->getParameter('dev_generator_tool.generate_translation')) {
+            $this->generateTranslation(sprintf('%s/Resources/translations', $this->src));
+        }
 
         $this->generateTestClass();
         $this->generateConfiguration();
@@ -265,7 +272,8 @@ class DoctrineCrudGenerator extends Generator
         ));
     }
 
-    protected function generateTranslation($dir) {
+    protected function generateTranslation($dir)
+    {
 
         if (!file_exists($dir)) {
             $this->filesystem->mkdir($dir, 0777);
@@ -301,12 +309,15 @@ class DoctrineCrudGenerator extends Generator
                 foreach($trans as $key=>$tran) {
 
                     if(!isset($translationsArr[$key])) {
+
                         $gtTran = $gt->translateText($tran, $fromLanguage = 'en', $toLanguage = 'ru');
+
                         if(!$gt->getErrors()) {
                             $tran = $gtTran;
                         } else {
                             echo 'Translator error. '.$gt->getErrors();
                         }
+
                         $tran = ucfirst($tran);
                         $translationsArr[$key] = $tran;
                     }
