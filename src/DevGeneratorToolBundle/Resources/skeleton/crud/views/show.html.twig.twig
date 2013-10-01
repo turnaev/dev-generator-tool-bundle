@@ -1,9 +1,10 @@
-{{ "{% extends '::Crud/show.html.twig' %}" }}
+{{ "{% extends '"~ parentBundle ~"::Crud/show.html.twig' %}" }}
 
 {{ "{% set crud_path_list=path('" ~ route_name_prefix ~ ".list') %}" }}
 {{ "{% set crud_path_create=path('" ~ route_name_prefix ~ ".create') %}" }}
 
 {{ "{% set crud_path_edit=path('" ~ route_name_prefix ~ ".edit', {'id': entity.id}) %}" }}
+
 {{ "{% set crud_path_delete=path('" ~ route_name_prefix ~ ".delete', {'id': entity.id}) %}" }}
 {{ "{% set delete_message='Do you really want to delete this %entity%?'|trans({'%entity%': '" ~ entity ~ "'}) %}" }}
 

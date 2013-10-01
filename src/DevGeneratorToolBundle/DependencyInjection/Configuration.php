@@ -19,14 +19,14 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('dev_generator_tool');
-        $rootNode->children()
-            ->scalarNode('coreBundlePath')
-                ->isRequired()
-                ->end()
-            ->end()
+        $rootNode
             ->children()
-                ->scalarNode('coreBundleNs')
-                ->isRequired()
+                ->arrayNode('bundle')
+                    ->children()
+                        ->scalarNode('core_path')->defaultValue('LP/CoreBundle')->end()
+                        ->scalarNode('web_path')->defaultValue('LP/WebBundle')->end()
+                    ->end()
+                ->end()
             ->end()
         ;
 

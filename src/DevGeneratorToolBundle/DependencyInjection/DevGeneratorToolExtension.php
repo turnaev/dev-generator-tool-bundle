@@ -25,7 +25,29 @@ class DevGeneratorToolExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $container->setParameter('dev_generator_tool.coreBundlePath', $config['coreBundlePath']);
-        $container->setParameter('dev_generator_tool.coreBundleNs', $config['coreBundleNs']);
+        //core
+        $container->setParameter('dev_generator_tool.bundle.core.path', $config['bundle']['core_path']);
+
+        $bundleName = str_replace('/', '', $config['bundle']['core_path']);
+        $container->setParameter('dev_generator_tool.bundle.core.name', $bundleName);
+
+        $bundleNs = str_replace('/', '\\', $config['bundle']['core_path']);
+        $container->setParameter('dev_generator_tool.bundle.core.ns', $bundleNs);
+
+        $baseNs = explode('\\', $bundleNs)[0];
+        $container->setParameter('dev_generator_tool.bundle.core.base_ns', $baseNs);
+
+        //web
+        $container->setParameter('dev_generator_tool.bundle.web.path', $config['bundle']['web_path']);
+
+        $bundleName = str_replace('/', '', $config['bundle']['web_path']);
+        $container->setParameter('dev_generator_tool.bundle.web.name', $bundleName);
+
+        $bundleNs = str_replace('/', '\\', $config['bundle']['web_path']);
+        $container->setParameter('dev_generator_tool.bundle.web.ns', $bundleNs);
+
+        $baseNs = explode('\\', $bundleNs)[0];
+        $container->setParameter('dev_generator_tool.bundle.web.base_ns', $baseNs);
+
     }
 }

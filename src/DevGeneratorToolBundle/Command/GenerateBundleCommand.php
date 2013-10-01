@@ -293,7 +293,7 @@ EOT
     protected function updateRouting($dialog, InputInterface $input, OutputInterface $output, $bundle, $format)
     {
 
-        $coreBundlePath = $this->getContainer()->getParameter('dev_generator_tool.coreBundlePath');
+        $webBundlePath = $this->getContainer()->getParameter('dev_generator_tool.bundle.web.path');
 
         $auto = true;
         if ($input->isInteractive()) {
@@ -301,7 +301,7 @@ EOT
         }
 
         $output->write('Importing the bundle routing resource: ');
-        $routing = new RoutingManipulator($this->getContainer()->getParameter('kernel.root_dir').'/../src/'.$coreBundlePath.'/Resources/config/routing.xml');
+        $routing = new RoutingManipulator($this->getContainer()->getParameter('kernel.root_dir').'/../src/'.$webBundlePath.'/Resources/config/routing.xml');
 
         try {
             $ret = $auto ? $routing->addResource($bundle, $format) : false;

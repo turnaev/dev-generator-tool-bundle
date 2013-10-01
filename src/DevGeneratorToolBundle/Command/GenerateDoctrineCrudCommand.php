@@ -224,8 +224,7 @@ EOT
         $routeName = strtolower($routeName);
 
 
-        $coreBundlePath = $this->getContainer()->getParameter('dev_generator_tool.coreBundleNs');
-        $baseNs = explode('\\', $coreBundlePath)[0];
+        $baseNs = $this->getContainer()->getParameter('dev_generator_tool.bundle.web.base_ns');
 
         $bundleName = $baseNs.$this->outputBundle;
 
@@ -281,9 +280,7 @@ EOT
     {
         if (null === $this->generator) {
             $this->generator = new DoctrineCrudGenerator($this->getContainer()->get('filesystem'), __DIR__.'/../Resources/skeleton/crud');
-
-            $coreBundlePath = $this->getContainer()->getParameter('dev_generator_tool.coreBundleNs');
-            $this->generator->setCoreBundleNs($coreBundlePath);
+            $this->generator->setContainer($this->getContainer());
 
         }
 
@@ -293,9 +290,7 @@ EOT
     public function setGenerator(DoctrineCrudGenerator $generator)
     {
         $this->generator = $generator;
-
-        $coreBundlePath = $this->getContainer()->getParameter('dev_generator_tool.coreBundleNs');
-        $this->generator->setCoreBundleNs($coreBundlePath);
+        $this->generator->setContainer($this->getContainer());
     }
 
     protected function getFormGenerator()

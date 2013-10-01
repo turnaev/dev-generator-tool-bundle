@@ -21,7 +21,7 @@ class DoctrineCrudGenerator extends Generator
     protected $metadata;
     protected $format;
     protected $actions;
-    protected $coreBundleNs;
+    protected $container;
     protected $src;
     protected $outputBundle;
 
@@ -41,9 +41,14 @@ class DoctrineCrudGenerator extends Generator
     }
 
 
-    public function setCoreBundleNs($coreBundlePath)
+    public function setContainer(\Symfony\Component\DependencyInjection\ContainerInterface $container)
     {
-        $this->coreBundleNs = $coreBundlePath;
+        $this->container = $container;
+    }
+
+    public function getContainer()
+    {
+        return $this->container;
     }
 
     /**
@@ -165,8 +170,7 @@ class DoctrineCrudGenerator extends Generator
             $this->format
         );
 
-
-        $baseNs = explode('\\', $this->coreBundleNs)[0];
+        $baseNs = $this->getContainer()->getParameter('dev_generator_tool.bundle.web.base_ns');
 
         $options = [
             'actions'           => $this->actions,
@@ -191,7 +195,7 @@ class DoctrineCrudGenerator extends Generator
         $entityClass = array_pop($parts);
         $entityNamespace = implode('\\', $parts);
 
-        $baseNs = explode('\\', $this->coreBundleNs)[0];
+
 
         $target = sprintf(
             '%s/Controller/%s/%sController.php',
@@ -211,6 +215,8 @@ class DoctrineCrudGenerator extends Generator
             $maxColumnNameSize = max($maxColumnNameSize, $fieldMapping['columnNameSize']);
         }
 
+        $baseNs = $this->getContainer()->getParameter('dev_generator_tool.bundle.web.base_ns');
+
         $options= [
 
                 'actions'           => $this->actions,
@@ -225,7 +231,8 @@ class DoctrineCrudGenerator extends Generator
                 'namespace'         => $baseNs.'\\'.$this->outputBundle,
                 'entity_namespace'  => $entityNamespace,
                 'format'            => $this->format,
-                'coreBundleNs'      => $this->coreBundleNs,
+                'webBundleNs'       => $this->getContainer()->getParameter('dev_generator_tool.bundle.web.ns'),
+                'coreBundleNs'      => $this->getContainer()->getParameter('dev_generator_tool.bundle.core.ns'),
                 'maxColumnNameSize' => $maxColumnNameSize,
         ];
 
@@ -319,7 +326,6 @@ class DoctrineCrudGenerator extends Generator
                 $translationsYml = '';
             }
 
-
             file_put_contents($file, $comments.$translationsYml);
         }
     }
@@ -348,6 +354,7 @@ class DoctrineCrudGenerator extends Generator
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
             'maxColumnNameSize' => $maxColumnNameSize,
+            'parentBundle'      => $this->getContainer()->getParameter('dev_generator_tool.bundle.web.name')
         ));
     }
 
@@ -394,6 +401,7 @@ class DoctrineCrudGenerator extends Generator
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
             'maxColumnNameSize' => $maxColumnNameSize,
+            'parentBundle'      => $this->getContainer()->getParameter('dev_generator_tool.bundle.web.name')
         ));
     }
 
@@ -410,6 +418,7 @@ class DoctrineCrudGenerator extends Generator
             'route_name_prefix' => $this->routeNamePrefix,
             'entity'            => $this->entity,
             'actions'           => $this->actions,
+            'parentBundle'      => $this->getContainer()->getParameter('dev_generator_tool.bundle.web.name')
         ));
     }
 
@@ -426,6 +435,7 @@ class DoctrineCrudGenerator extends Generator
             'route_name_prefix' => $this->routeNamePrefix,
             'entity'            => $this->entity,
             'actions'           => $this->actions,
+            'parentBundle'      => $this->getContainer()->getParameter('dev_generator_tool.bundle.web.name')
         ));
     }
 

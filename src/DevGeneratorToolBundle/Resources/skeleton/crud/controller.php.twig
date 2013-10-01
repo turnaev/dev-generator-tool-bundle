@@ -6,7 +6,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 {% if 'new' in actions or 'edit' in actions or 'delete' in actions %}
 use Symfony\Component\HttpFoundation\Request;
 {%   endif %}
-use {{ coreBundleNs }}\Controller\BaseController;
+use {{ webBundleNs }}\Controller\BaseController;
 {% if 'annotation' == format -%}
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -23,7 +23,6 @@ use APY\ExtDataGridBundle\Grid\GridBuilder;
 
 /**
  * {{ entity }} controller.
- *
 {% if 'annotation' == format %}
  * @Route("/{{ route_prefix }}")
 {% endif %}
