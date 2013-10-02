@@ -12,7 +12,7 @@
      */
     public function editAction($id)
     {
-        $em     = $this->getDoctrine()->getManager();
+        $em     = $this->getEntityManager();
         $entity = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
 
         if (!$entity) {
@@ -23,9 +23,10 @@
         $editForm->handleRequest($this->getRequest());
 
         if ($editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+
             $em->persist($entity);
             $em->flush();
+
             return $this->redirect($this->generateUrl('{{ route_name_prefix }}.show', ['id' => $entity->getId()]));
         }
 
