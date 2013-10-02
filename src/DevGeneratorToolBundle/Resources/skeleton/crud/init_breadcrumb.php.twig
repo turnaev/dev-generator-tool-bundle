@@ -4,10 +4,7 @@
       */
     private  function initBreadcrumb()
     {
-        /** @var \WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs $breadcrumbs */
-        $breadcrumbs = $this->get('white_october_breadcrumbs');
-
-        return $breadcrumbs
+        return $this->getBreadcrumbs()
             ->clear()
             ->addItem('Home', $this->generateUrl('backend.main'))
             ->addItem('{{ entity }} List', $this->generateUrl('{{ route_prefix }}.list'));
