@@ -14,7 +14,7 @@
 {% for field, metadata in fields %}
     <tr>
         {% if field in ['id'] %}
-<th>{{ "{{ '" ~ field ~ "'|trans() }}" }}</th>
+<th>{{ "{{ '" ~ field ~ "'|trans }}" }}</th>
 {% else %}
 <th>{{ "{{ '" ~ field ~ "'|trans({}, 'entity_" ~ entity~ "') }}" }}</th>
 {% endif %}

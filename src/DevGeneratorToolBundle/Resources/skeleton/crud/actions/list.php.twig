@@ -9,7 +9,7 @@
          * @var GridBuilder $gridBuilder
          */
         $gridBuilder = $this->get('grid.builder');
-        {% set format = "             %-" ~ maxColumnNameSize ~ "s => %s" %}
+        {% set format = "             %-" ~ (maxColumnNameSize+1) ~ "s => %s" %}
 
         $columns = [
         {% for field, metadata in fields %}
@@ -30,7 +30,7 @@
             ->setSource('{{ bundle }}:{{ entity }}', $columns)
             ->setRowActions([
                 [null, '{{ route_prefix }}.show', false, '_self', ['icon'=>'icon-eye-open', 'title'=>'Detail']],
-                [null, '{{ route_prefix }}.edit', false, '_self', ['icon'=>'icon-edit', 'title'=>'Edit']],
+                [null, '{{ route_prefix }}.edit', false, '_self', ['icon'=>'icon-edit',     'title'=>'Edit']],
             ]);
 
             $massActionDelete = new DeleteMassAction(true);
