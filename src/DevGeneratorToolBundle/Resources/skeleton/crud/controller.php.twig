@@ -6,13 +6,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 {% if 'new' in actions or 'edit' in actions or 'delete' in actions %}
 use Symfony\Component\HttpFoundation\Request;
 {%   endif %}
-use {{ webBundleNs }}\Controller\BaseController;
 {% if 'annotation' == format -%}
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 {%- endif %}
 
+use {{ webBundleNs }}\Controller\BaseController;
 use {{ coreBundleNs }}\Entity\{{ entity }};
 {% if 'new' in actions or 'edit' in actions %}
 use {{ namespace }}\Form\Type\{{ entity }}FormType;
