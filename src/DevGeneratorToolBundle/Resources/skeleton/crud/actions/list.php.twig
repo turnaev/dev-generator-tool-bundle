@@ -9,7 +9,7 @@
          * @var GridBuilder $gridBuilder
          */
         $gridBuilder = $this->get('grid.builder');
-        {% set format = "             %-" ~ (maxColumnNameSize+1) ~ "s => %s" %}
+{% set format = "             %-" ~ (maxColumnNameSize+1) ~ "s => %s" %}
 
         $columns = [
         {% for field, metadata in fields %}
