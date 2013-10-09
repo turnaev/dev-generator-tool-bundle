@@ -6,6 +6,6 @@
     {
         return $this->getBreadcrumbs()
             ->clear()
-            ->addItem('Home', $this->generateUrl('backend.main'))
+            ->addItem('Home', $this->generateUrl('back_office.homepage'))
             ->addItem('{{ entity }} List', $this->generateUrl('{{ route_prefix }}.list'));
     }
