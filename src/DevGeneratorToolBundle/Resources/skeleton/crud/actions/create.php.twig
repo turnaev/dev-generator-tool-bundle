@@ -30,9 +30,8 @@
         }
 
         $this->initBreadcrumb()
-             ->addItem('Creation %entity%',
-                       $this->generateUrl('{{ route_name_prefix }}.create'),
-                       ['%entity%'=>'{{ entity }}']);
+             ->addItem('Create',
+                       $this->generateUrl('{{ route_name_prefix }}.create'));
 
 {% if 'annotation' == format %}
         return [
@@ -44,8 +43,7 @@
             '{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/create.html.twig', [
                 'entity'       => $entity,
                 'form'         => $form->createView(),
-                'context_menu' => $this->get('menu.builder')
-                                       ->createContextMenu('{{ route_name_entity }}')
+                'context_menu' => $this->createContextMenu()
         ]);
 {% endif %}
     }

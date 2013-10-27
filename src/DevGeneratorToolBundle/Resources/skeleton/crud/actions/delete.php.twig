@@ -3,7 +3,6 @@
      * Deletes a {{ entity }} entity.
      * @param integer $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
 {% if 'annotation' == format %}
      * @Route("/{id}", name="{{ route_name_prefix }}.delete")
      * @Method("DELETE")
@@ -16,13 +15,9 @@
 
         if ($form->isValid()) {
 
-            $em     = $this->getEntityManager();
-            $entity = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
+            $entity = $this->getEntity($id);
 
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
-            }
-
+            $em   = $this->getEntityManager();
             $em->remove($entity);
             $em->flush();
         }

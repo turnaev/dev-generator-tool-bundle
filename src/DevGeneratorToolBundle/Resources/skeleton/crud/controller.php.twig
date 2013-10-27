@@ -29,6 +29,8 @@ use APY\ExtDataGridBundle\Grid\GridBuilder;
  */
 class {{ entity_class }}Controller extends BaseController
 {
+    {%- include 'create_context_menu.php.twig' %}
+
     {%- if 'list' in actions %}
         {%- include 'actions/list.php.twig' %}
     {%- endif %}
@@ -48,6 +50,8 @@ class {{ entity_class }}Controller extends BaseController
     {%- if 'delete' in actions %}
         {%- include 'actions/delete.php.twig' %}
     {%- endif %}
+
+    {%- include 'get_entity.php.twig' %}
 
     {%- include 'init_breadcrumb.php.twig' %}
 }
