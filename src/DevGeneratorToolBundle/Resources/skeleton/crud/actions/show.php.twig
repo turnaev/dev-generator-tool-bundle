@@ -2,8 +2,7 @@
     /**
      * Finds and displays a {{ entity }} entity.
      * @param integer $id
-     * @return \Symfony\Component\HttpFoundation\Response
-     //* @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @return HttpFoundation\Response
 {% if 'annotation' == format %}
      * @Route("/{id}", name="{{ route_name_prefix }}.show")
      * @Method("GET")
@@ -13,15 +12,9 @@
     public function showAction($id)
     {
         $entity = $this->getEntity($id);
-        {#$entity = $this->getRepository('{{ bundle }}:{{ entity }}')->find($id);#}
 
-        {#if (!$entity) {#}
-            {#throw $this->createNotFoundException('Unable to find {{ entity }} entity.');#}
-        {#}#}
-
-        $this->initBreadcrumb()
-             ->addItem('Show',
-                       $this->generateUrl('{{ route_name_prefix }}.show', ['id' => $entity->getId()]))
+        $url = $this->generateUrl('{{ route_prefix }}.show', ['id' => $entity->getId()]);
+        $this->initBreadcrumb()->addItem('Show', $url);
 
 {% if 'annotation' == format %}
         return [

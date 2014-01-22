@@ -1,14 +1,15 @@
 
     /**
      * Deletes a {{ entity }} entity.
+     * @param HttpFoundation\Request $request
      * @param integer $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return HttpFoundation\RedirectResponse
 {% if 'annotation' == format %}
      * @Route("/{id}", name="{{ route_name_prefix }}.delete")
      * @Method("DELETE")
 {% endif %}
      */
-    public function deleteAction(Request $request, $id)
+    public function deleteAction(HttpFoundation\Request $request, $id)
     {
         $form = $this->createDeleteForm($id);
         $form->submit($request);
@@ -22,5 +23,6 @@
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('{{ route_name_prefix }}.list'));
+        $url = $this->generateUrl('{{ route_prefix }}.list');
+        return $this->redirect($url);
     }

@@ -1,13 +1,10 @@
 
     /**
      * List all {{ entity }} entities.
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return HttpFoundation\Response
      */
-    public function listAction()
+    public function listAction(HttpFoundation\Request $request)
     {
-        /**
-         * @var GridBuilder $gridBuilder
-         */
         $gridBuilder = $this->get('grid.builder');
 {% set format = "             %-" ~ (maxColumnNameSize+1) ~ "s => %s" %}
 
@@ -26,20 +23,30 @@
             ->createQueryBuilder('i')
         ;
         $gridBuilder
-            ->setGridId('{{ route_name_entity }}')
+            ->setGridId('{{ name_entity }}_grid')
             ->setRouteUrl($this->generateUrl('{{ route_prefix }}.list'))
             ->setSource($queryBuilder, $columns)
             ->setRowActions([
-                [null, '{{ route_prefix }}.show', false, '_self', ['icon'=>'icon-eye-open', 'title'=>'Detail']],
-                [null, '{{ route_prefix }}.edit', false, '_self', ['icon'=>'icon-edit',     'title'=>'Edit']],
+                [null, '{{ route_prefix }}.show', false, '_self', ['icon'=>'icon-eye',  'title'=>'Detail']],
+                [null, '{{ route_prefix }}.edit', false, '_self', ['icon'=>'icon-edit', 'title'=>'Edit']],
             ]);
 
-        $this->initBreadcrumb();
+        if($request->isXmlHttpRequest()) {
 
-        return $gridBuilder->getGridResponse(
-            '{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/list.html.twig', [
-                'with_ajax'    => true,
-                'context_menu' => $this->createContextMenu()
-            ]
-        );
+            $response = $gridBuilder->getGridResponse(
+                '{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/list.html.twig'
+            );
+        } else {
+
+            $this->initBreadcrumb();
+
+            $response = $gridBuilder->getGridResponse(
+                '{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/list.html.twig', [
+                    'with_ajax'    => true,
+                    'context_menu' => $this->createContextMenu()
+                ]
+            );
+        }
+
+        return $response;
     }

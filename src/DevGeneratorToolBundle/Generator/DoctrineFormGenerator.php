@@ -60,6 +60,8 @@ class DoctrineFormGenerator extends Generator
      */
     public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata)
     {
+        $this->nameEntity  = strtolower($entity);
+
         if(is_null($this->src)) {
             $this->src = $bundle->getPath();
         }
@@ -105,7 +107,7 @@ class DoctrineFormGenerator extends Generator
             'entity_class'     => $entityClass,
             'form_class'       => $this->className.'FormType',
             'form_label'       => $entityClass,
-            'form_type_name'   => 'form'.$entityClass,
+            'name_entity'   => $this->nameEntity,
             'maxColumnNameSize' => $maxColumnNameSize,
         ));
     }

@@ -1,19 +1,20 @@
 
     /**
      * Creates a new {{ entity }} entity.
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @param HttpFoundation\Request $request
+     * @return HttpFoundation\Response
 {% if 'annotation' == format %}
      * @Route("/", name="{{ route_prefix }}.create")
      * @Method("POST")
      * @Template("{{ bundle }}:{{ entity }}:new.html.twig")
 {% endif %}
      */
-    public function createAction()
+    public function createAction(HttpFoundation\Request $request)
     {
         $entity  = new {{ entity_class }}();
 
         $form = $this->createForm(new {{ entity_class }}FormType(), $entity);
-        $form->handleRequest($this->getRequest());
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
 
@@ -22,16 +23,17 @@
             $em->flush();
 
             {% if 'show' in actions -%}
-                return $this->redirect($this->generateUrl('{{ route_name_prefix }}.show', ['id' => $entity->getId()]));
-            {%- else -%}
-                return $this->redirect($this->generateUrl('{{ route_name_prefix }}'));
+                $url = $this->generateUrl('{{ route_prefix }}.show', ['id' => $entity->getId()]);
+                return $this->redirect($url);
+            {%- else %}
+                $url = $this->generateUrl('{{ route_prefix }}');
+                return $this->redirect();
             {%- endif %}
 
         }
 
-        $this->initBreadcrumb()
-             ->addItem('Create',
-                       $this->generateUrl('{{ route_name_prefix }}.create'));
+        $url = $this->generateUrl('{{ route_prefix }}.create');
+        $this->initBreadcrumb()->addItem('Create', $url);
 
 {% if 'annotation' == format %}
         return [

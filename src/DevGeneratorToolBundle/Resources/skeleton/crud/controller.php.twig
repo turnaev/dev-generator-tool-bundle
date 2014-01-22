@@ -2,9 +2,8 @@
 
 namespace {{ namespace }}\Controller{{ entity_namespace ? '\\' ~ entity_namespace : '' }};
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 {% if 'new' in actions or 'edit' in actions or 'delete' in actions %}
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation;
 {%   endif %}
 {% if 'annotation' == format -%}
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -18,9 +17,6 @@ use {{ coreBundleNs }}\Entity\{{ entity }};
 use {{ namespace }}\Form\Type\{{ entity }}FormType;
 {% endif %}
 
-use APY\DataGridBundle\Grid\Action\DeleteMassAction;
-use APY\ExtDataGridBundle\Grid\GridBuilder;
-
 /**
  * {{ entity }} controller.
 {% if 'annotation' == format %}
@@ -29,8 +25,6 @@ use APY\ExtDataGridBundle\Grid\GridBuilder;
  */
 class {{ entity_class }}Controller extends BaseController
 {
-    {%- include 'create_context_menu.php.twig' %}
-
     {%- if 'list' in actions %}
         {%- include 'actions/list.php.twig' %}
     {%- endif %}
@@ -52,6 +46,8 @@ class {{ entity_class }}Controller extends BaseController
     {%- endif %}
 
     {%- include 'get_entity.php.twig' %}
+
+    {%- include 'create_context_menu.php.twig' %}
 
     {%- include 'init_breadcrumb.php.twig' %}
 }

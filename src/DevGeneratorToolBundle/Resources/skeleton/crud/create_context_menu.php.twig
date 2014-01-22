@@ -1,13 +1,13 @@
 
     /**
-     * @return \WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs
+     * @param null|Currency $entity
+     * @return \Knp\Menu\ItemInterface
      */
     private function createContextMenu({{ entity }} $entity = null)
     {
-        /** @var \VN\WebBundle\Menu\MenuBuilder $menuBuilder */
-        $menuBuilder = $this->get('menu.builder');
+        $menuBuilder = $this->get('menu.context.builder');
 
-        $contextMenu = $menuBuilder->createContextMenu('{{ route_name_entity }}');
+        $contextMenu = $menuBuilder->create('{{ name_entity }}', $entity);
 
-        return $menuBuilder->initContextMenu($contextMenu);
+        return $menuBuilder->init($contextMenu);
     }

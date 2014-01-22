@@ -1,13 +1,12 @@
 
     /**
-     * @param $id
-     *
+     * @param integer $id
      * @return {{ entity }}
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    private function createContextMenu($id)
+    private function getEntity($id)
     {
-        $entity = $this->getRepository('VNCoreBundle:{{ entity }}')->find($id);
+        $entity = $this->getRepository('{{ bundle }}:{{ entity }}')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find {{ entity }} entity.');

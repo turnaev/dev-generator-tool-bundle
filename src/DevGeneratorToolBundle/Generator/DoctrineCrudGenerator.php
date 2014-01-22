@@ -14,7 +14,9 @@ class DoctrineCrudGenerator extends Generator
 {
     protected $filesystem;
     protected $skeletonDir;
+    protected $baseRoutePrefix;
     protected $routePrefix;
+    protected $nameEntity;
     protected $routeNamePrefix;
     protected $bundle;
     protected $entity;
@@ -24,6 +26,7 @@ class DoctrineCrudGenerator extends Generator
     protected $container;
     protected $src;
     protected $outputBundle;
+    private $fieldMappings = array();
 
     /**
      * @param mixed $outputBundle
@@ -82,8 +85,9 @@ class DoctrineCrudGenerator extends Generator
      */
     public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata, $format, $routePrefix, $needWriteActions, $forceOverwrite)
     {
-
-        $this->routePrefix = $routePrefix;
+        $this->baseRoutePrefix = $routePrefix;
+        $this->nameEntity  = strtolower($entity);
+        $this->routePrefix = $routePrefix.'.'.$this->nameEntity;
         $this->routeNamePrefix = str_replace('/', '_', $routePrefix);
         $this->actions = $needWriteActions ? array('list', 'show', 'new', 'edit', 'delete') : array('list', 'show');
 
@@ -132,7 +136,6 @@ class DoctrineCrudGenerator extends Generator
             $this->generateTranslation(sprintf('%s/Resources/translations', $this->src));
         }
 
-        $this->generateTestClass();
         $this->generateConfiguration();
     }
 
@@ -182,7 +185,6 @@ class DoctrineCrudGenerator extends Generator
         $options = [
             'actions'           => $this->actions,
             'route_prefix'      => $this->routePrefix,
-            'route_name_prefix' => $this->routeNamePrefix,
             'bundle'            => $baseNs.$this->outputBundle,
             'entity'            => $this->entity,
         ];
@@ -201,8 +203,6 @@ class DoctrineCrudGenerator extends Generator
         $parts = explode('\\', $this->entity);
         $entityClass = array_pop($parts);
         $entityNamespace = implode('\\', $parts);
-
-
 
         $target = sprintf(
             '%s/Controller/%s/%sController.php',
@@ -227,9 +227,9 @@ class DoctrineCrudGenerator extends Generator
         $options= [
 
                 'actions'           => $this->actions,
+                'base_route_prefix' => $this->baseRoutePrefix,
                 'route_prefix'      => $this->routePrefix,
-                'route_name_prefix' => $this->routeNamePrefix,
-                'route_name_entity' => preg_replace('/^.*?\./', '',  $this->routePrefix),
+                'name_entity'       => $this->nameEntity,
                 'dir'               => $this->skeletonDir,
                 'bundle'            => $this->bundle->getName(),
                 'entity'            => $this->entity,
@@ -242,39 +242,11 @@ class DoctrineCrudGenerator extends Generator
                 'coreBundleNs'      => $this->getContainer()->getParameter('dev_generator_tool.bundle.core.ns'),
                 'maxColumnNameSize' => $maxColumnNameSize,
         ];
-
         $this->renderFile($this->skeletonDir, 'controller.php.twig', $target, $options);
-    }
-
-    /**
-     * Generates the functional test class only.
-     *
-     */
-    protected function generateTestClass()
-    {
-        $parts = explode('\\', $this->entity);
-        $entityClass = array_pop($parts);
-        $entityNamespace = implode('\\', $parts);
-
-        $dir    = $this->src .'/Tests/Controller';
-        $target = $dir .'/'. str_replace('\\', '/', $entityNamespace).'/'. $entityClass .'ControllerTest.php';
-
-        $this->renderFile($this->skeletonDir, 'tests/test.php.twig', $target, array(
-            'route_prefix'      => $this->routePrefix,
-            'route_name_prefix' => $this->routeNamePrefix,
-            'entity'            => $this->entity,
-            'entity_class'      => $entityClass,
-            'namespace'         => $this->bundle->getNamespace(),
-            'entity_namespace'  => $entityNamespace,
-            'actions'           => $this->actions,
-            'form_type_name'    => strtolower(str_replace('\\', '_', $this->bundle->getNamespace()).($parts ? '_' : '').implode('_', $parts).'_'.$entityClass.'Form'),
-            'dir'               => $this->skeletonDir,
-        ));
     }
 
     protected function generateTranslation($dir)
     {
-
         if (!file_exists($dir)) {
             $this->filesystem->mkdir($dir, 0777);
         }
@@ -355,7 +327,6 @@ class DoctrineCrudGenerator extends Generator
             $maxColumnNameSize = max($maxColumnNameSize, $fieldMapping['columnNameSize']);
         }
 
-
         $this->renderFile($this->skeletonDir, 'views/list.html.twig.twig', $dir.'/Crud/list.html.twig', array(
             'dir'               => $this->skeletonDir,
             'entity'            => $this->entity,
@@ -363,13 +334,12 @@ class DoctrineCrudGenerator extends Generator
             'actions'           => $this->actions,
             'record_actions'    => $this->getRecordActions(),
             'route_prefix'      => $this->routePrefix,
-            'route_name_prefix' => $this->routeNamePrefix,
             'maxColumnNameSize' => $maxColumnNameSize,
             'parentBundle'      => $this->getContainer()->getParameter('dev_generator_tool.bundle.web.name')
         ));
     }
 
-    private $fieldMappings = array();
+
     private function getFieldMappings()
     {
         if(!$this->fieldMappings) {
@@ -410,7 +380,6 @@ class DoctrineCrudGenerator extends Generator
             'fields'            => $fieldMappings,
             'actions'           => $this->actions,
             'route_prefix'      => $this->routePrefix,
-            'route_name_prefix' => $this->routeNamePrefix,
             'maxColumnNameSize' => $maxColumnNameSize,
             'parentBundle'      => $this->getContainer()->getParameter('dev_generator_tool.bundle.web.name')
         ));
@@ -426,7 +395,6 @@ class DoctrineCrudGenerator extends Generator
         $this->renderFile($this->skeletonDir, 'views/create.html.twig.twig', $dir.'/Crud/create.html.twig', array(
             'dir'               => $this->skeletonDir,
             'route_prefix'      => $this->routePrefix,
-            'route_name_prefix' => $this->routeNamePrefix,
             'entity'            => $this->entity,
             'actions'           => $this->actions,
             'parentBundle'      => $this->getContainer()->getParameter('dev_generator_tool.bundle.web.name')
@@ -443,7 +411,6 @@ class DoctrineCrudGenerator extends Generator
         $this->renderFile($this->skeletonDir, 'views/edit.html.twig.twig', $dir.'/Crud/edit.html.twig', array(
             'dir'               => $this->skeletonDir,
             'route_prefix'      => $this->routePrefix,
-            'route_name_prefix' => $this->routeNamePrefix,
             'entity'            => $this->entity,
             'actions'           => $this->actions,
             'parentBundle'      => $this->getContainer()->getParameter('dev_generator_tool.bundle.web.name')
