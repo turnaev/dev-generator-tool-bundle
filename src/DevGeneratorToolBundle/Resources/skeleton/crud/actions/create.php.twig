@@ -1,19 +1,15 @@
 
     /**
-     * Creates a new {{ entity }} entity.
+     * Creates a new Entity\{{ entity }} entity.
      * @param HttpFoundation\Request $request
-     * @return HttpFoundation\Response
-{% if 'annotation' == format %}
-     * @Route("/", name="{{ route_prefix }}.create")
-     * @Method("POST")
-     * @Template("{{ bundle }}:{{ entity }}:new.html.twig")
-{% endif %}
+     * @return HttpFoundation\RedirectResponse|HttpFoundation\Response
      */
     public function createAction(HttpFoundation\Request $request)
     {
-        $entity  = new {{ entity_class }}();
+        $entity  = new Entity\{{ entity }}();
 
-        $form = $this->createForm(new {{ entity_class }}FormType(), $entity);
+        $formType = $this->get('entity.form.{{ entity_name }}.type');
+        $form = $this->createForm($formType, $entity);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -29,23 +25,15 @@
                 $url = $this->generateUrl('{{ route_prefix }}');
                 return $this->redirect();
             {%- endif %}
-
         }
 
         $url = $this->generateUrl('{{ route_prefix }}.create');
         $this->initBreadcrumb()->addItem('Create', $url);
 
-{% if 'annotation' == format %}
-        return [
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        ];
-{% else %}
         return $this->render(
-            '{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/create.html.twig', [
+            '{{ backend_bundle }}:{{ entity }}:Crud/create.html.twig', [
                 'entity'       => $entity,
                 'form'         => $form->createView(),
                 'context_menu' => $this->createContextMenu()
         ]);
-{% endif %}
     }

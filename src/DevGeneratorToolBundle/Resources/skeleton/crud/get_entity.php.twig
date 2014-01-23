@@ -1,12 +1,12 @@
 
     /**
      * @param integer $id
-     * @return {{ entity }}
+     * @return Entity\{{ entity }}
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     private function getEntity($id)
     {
-        $entity = $this->getRepository('{{ bundle }}:{{ entity }}')->find($id);
+        $entity = $this->getRepository('{{ core_bundle }}:{{ entity }}')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find {{ entity }} entity.');

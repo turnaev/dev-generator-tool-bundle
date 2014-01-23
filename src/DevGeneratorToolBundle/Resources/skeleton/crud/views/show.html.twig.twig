@@ -1,4 +1,4 @@
-{{ "{% extends '"~ parentBundle ~"::Crud/show.html.twig' %}" }}
+{{ "{% extends '"~ web_bundle ~"::Crud/show.html.twig' %}" }}
 
 {{ "{% set crud_path_delete=path('" ~ route_prefix ~ ".delete', {'id': entity.id}) %}" }}
 {{ "{% set delete_message='Do you really want to delete this %entity%?'|trans({'%entity%': '" ~ entity ~ "'}) %}" }}

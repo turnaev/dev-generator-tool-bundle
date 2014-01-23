@@ -4,10 +4,6 @@
      * @param HttpFoundation\Request $request
      * @param integer $id
      * @return HttpFoundation\RedirectResponse
-{% if 'annotation' == format %}
-     * @Route("/{id}", name="{{ route_name_prefix }}.delete")
-     * @Method("DELETE")
-{% endif %}
      */
     public function deleteAction(HttpFoundation\Request $request, $id)
     {

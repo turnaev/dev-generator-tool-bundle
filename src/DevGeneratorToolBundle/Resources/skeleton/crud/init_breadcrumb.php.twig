@@ -4,11 +4,8 @@
      */
     private  function initBreadcrumb()
     {
-        $homeUrl = $this->generateUrl('{{ base_route_prefix }}.index');
         $listUrl = $this->generateUrl('{{ route_prefix }}.list');
 
         return $this->getBreadcrumbs()
-            ->clear()
-            ->addItem('Home', $homeUrl)
             ->addItem('{{ entity }} List', $listUrl);
     }

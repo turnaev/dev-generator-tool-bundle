@@ -6,7 +6,7 @@
     public function listAction(HttpFoundation\Request $request)
     {
         $gridBuilder = $this->get('grid.builder');
-{% set format = "             %-" ~ (maxColumnNameSize+1) ~ "s => %s" %}
+{% set format = "             %-" ~ (max_column_name_size+1) ~ "s => %s" %}
 
         $columns = [
         {% for field, metadata in fields %}
@@ -19,11 +19,11 @@
         {% endfor %}
         ];
 
-        $queryBuilder = $this->getRepository('{{ bundle }}:{{ entity }}')
+        $queryBuilder = $this->getRepository('{{ core_bundle }}:{{ entity }}')
             ->createQueryBuilder('i')
         ;
         $gridBuilder
-            ->setGridId('{{ name_entity }}_grid')
+            ->setGridId('{{ entity_name }}_grid')
             ->setRouteUrl($this->generateUrl('{{ route_prefix }}.list'))
             ->setSource($queryBuilder, $columns)
             ->setRowActions([
@@ -34,14 +34,14 @@
         if($request->isXmlHttpRequest()) {
 
             $response = $gridBuilder->getGridResponse(
-                '{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/list.html.twig'
+                '{{ backend_bundle }}:{{ entity }}:Crud/list.html.twig'
             );
         } else {
 
             $this->initBreadcrumb();
 
             $response = $gridBuilder->getGridResponse(
-                '{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/list.html.twig', [
+                '{{ backend_bundle }}:{{  entity }}:Crud/list.html.twig', [
                     'with_ajax'    => true,
                     'context_menu' => $this->createContextMenu()
                 ]

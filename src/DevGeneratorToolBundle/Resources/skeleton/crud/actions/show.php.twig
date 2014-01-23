@@ -3,11 +3,6 @@
      * Finds and displays a {{ entity }} entity.
      * @param integer $id
      * @return HttpFoundation\Response
-{% if 'annotation' == format %}
-     * @Route("/{id}", name="{{ route_name_prefix }}.show")
-     * @Method("GET")
-     * @Template()
-{% endif %}
      */
     public function showAction($id)
     {
@@ -16,21 +11,12 @@
         $url = $this->generateUrl('{{ route_prefix }}.show', ['id' => $entity->getId()]);
         $this->initBreadcrumb()->addItem('Show', $url);
 
-{% if 'annotation' == format %}
-        return [
-            'entity'      => $entity,
-{% if 'delete' in actions %}
-            'delete_form' => $this->createDeleteForm($id)->createView(),
-{% endif %}
-        ];
-{% else %}
         return $this->render(
-            '{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/show.html.twig', [
+            '{{ backend_bundle }}:{{ entity }}:Crud/show.html.twig', [
                 'entity'       => $entity,
 {% if 'delete' in actions %}
                 'delete_form'  => $this->createDeleteForm($id)->createView(),
 {% endif %}
                 'context_menu' => $this->createContextMenu($entity)
         ]);
-{% endif %}
     }

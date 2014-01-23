@@ -1,0 +1,7 @@
+
+        <service id="entity.form.{{ entity_name }}.type" class="{{ backend_bundle_ns }}\Form\Type\{{ form_class }}" public="true">
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+            <tag name="form.type"/>
+        </service>

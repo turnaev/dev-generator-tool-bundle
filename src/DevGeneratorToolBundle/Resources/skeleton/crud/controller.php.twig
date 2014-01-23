@@ -1,29 +1,18 @@
 <?php
 
-namespace {{ namespace }}\Controller{{ entity_namespace ? '\\' ~ entity_namespace : '' }};
+namespace {{ backend_bundle_ns }}\Controller;
 
 {% if 'new' in actions or 'edit' in actions or 'delete' in actions %}
 use Symfony\Component\HttpFoundation;
 {%   endif %}
-{% if 'annotation' == format -%}
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-{%- endif %}
 
-use {{ webBundleNs }}\Controller\BaseController;
-use {{ coreBundleNs }}\Entity\{{ entity }};
-{% if 'new' in actions or 'edit' in actions %}
-use {{ namespace }}\Form\Type\{{ entity }}FormType;
-{% endif %}
+use {{ web_bundle_ns }}\Controller\BaseController;
+use {{ core_bundle_ns }}\Entity;
 
 /**
  * {{ entity }} controller.
-{% if 'annotation' == format %}
- * @Route("/{{ route_prefix }}")
-{% endif %}
  */
-class {{ entity_class }}Controller extends BaseController
+class {{ entity }}Controller extends BaseController
 {
     {%- if 'list' in actions %}
         {%- include 'actions/list.php.twig' %}

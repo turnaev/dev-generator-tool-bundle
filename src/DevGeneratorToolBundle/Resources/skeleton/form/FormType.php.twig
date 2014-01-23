@@ -1,14 +1,16 @@
 <?php
 
-namespace {{ bundel_namespace_target }}\Form{{ entity_namespace ? '\\' ~ entity_namespace : '' }}\Type;
+namespace {{ backend_bundle_ns }}\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-{% set format = "%-" ~ maxColumnNameSize ~ "s" %}
+{% set format = "%-" ~ max_column_name_size ~ "s" %}
 
-class {{ form_class }} extends AbstractType
+class {{ form_class }} extends AbstractType implements \Symfony\Component\DependencyInjection\ContainerAwareInterface
 {
+    use \{{ core_bundle_ns }}\Form\Type\FormTypeContainerableTrait;
+
     /**
      * @param FormBuilderInterface $builder
      * @param array                $options
@@ -16,7 +18,7 @@ class {{ form_class }} extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder{{ "\n" }}{%- for field in fields %}
-            ->add({{ format|format("'" ~field ~ "'") }}, null, ['label'=>{{ format|format("'" ~field ~ "'") }}, 'translation_domain' => 'entity_{{ entity_class }}']){{ "\n" }}
+            ->add({{ format|format("'" ~field ~ "'") }}, null, ['label'=>{{ format|format("'" ~field ~ "'") }}, 'translation_domain' => 'entity_{{ entity }}']){{ "\n" }}
         {%- endfor %}
         ;
     }
@@ -27,7 +29,7 @@ class {{ form_class }} extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => '{{ namespace }}\Entity{{ entity_namespace ? '\\' ~ entity_namespace : '' }}\{{ entity_class }}',
+            'data_class' => '{{ core_bundle_ns }}\Entity\{{ entity }}',
             'label'      => '{{ form_label }}',
         ]);
     }
@@ -37,6 +39,6 @@ class {{ form_class }} extends AbstractType
      */
     public function getName()
     {
-        return 'form_{{ name_entity }}';
+        return 'form_{{ entity_name }}';
     }
 }

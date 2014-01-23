@@ -34,7 +34,6 @@ class GenerateDoctrineCrudCommand extends GenerateDoctrineCommand
                 new InputOption('entity', '', InputOption::VALUE_REQUIRED, 'The entity class name to initialize (shortcut notation)'),
                 new InputOption('route-prefix', '', InputOption::VALUE_REQUIRED, 'The route prefix'),
                 new InputOption('with-write', '', InputOption::VALUE_NONE, 'Whether or not to generate create, new and delete actions'),
-                new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)', 'annotation'),
                 new InputOption('overwrite', '', InputOption::VALUE_NONE, 'Do not stop the generation if crud controller already exist, thus overwriting all generated files'),
                 new InputOption('src', '', InputOption::VALUE_REQUIRED, 'output dir'),
                 new InputOption('output-bundle', '', InputOption::VALUE_REQUIRED, 'output bundle'),
@@ -88,7 +87,6 @@ EOT
         $entity = Validators::validateEntityName($input->getOption('entity'));
         list($bundle, $entity) = $this->parseShortcutNotation($entity);
 
-        $format = Validators::validateFormat($input->getOption('format'));
         $prefix = $this->getRoutePrefix($input, $entity);
         $withWrite = $input->getOption('with-write');
         $forceOverwrite = $input->getOption('overwrite');
@@ -102,22 +100,17 @@ EOT
         $generator = $this->getGenerator();
         $generator->setSrc($this->src);
         $generator->setOutputBundle($this->outputBundle);
-        $generator->generate($bundle, $entity, $metadata[0], $format, $prefix, $withWrite, $forceOverwrite);
+
+        $generator->generate($bundle, $entity, $metadata[0], $prefix, $withWrite, $forceOverwrite);
 
         $output->writeln('Generating the CRUD code: <info>OK</info>');
 
         $errors = array();
-        $runner = $dialog->getRunner($output, $errors);
 
         // form
         if ($withWrite) {
-            $this->generateForm($bundle, $entity, $metadata);
+            $this->generateForm($bundle, $entity, $metadata, $generator->getTplOptions());
             $output->writeln('Generating the Form code: <info>OK</info>');
-        }
-
-        // routing
-        if ('annotation' != $format) {
-            $runner($this->updateRouting($dialog, $input, $output, $bundle, $format, $entity, $prefix));
         }
 
         $dialog->writeGeneratorSummary($output, $errors);
@@ -161,15 +154,7 @@ EOT
         $input->setOption('with-write', $withWrite);
 
         // format
-        $format = $input->getOption('format');
-        $output->writeln(array(
-            '',
-            'Determine the format to use for the generated CRUD.',
-            '',
-        ));
-        $format = $dialog->askAndValidate($output, $dialog->getQuestion('Configuration format (yml, xml, php, or annotation)', $format), array('DevGeneratorToolBundle\Command\Validators', 'validateFormat'), false, $format);
-        $input->setOption('format', $format);
-
+        $format = 'xml';
         // route prefix
         $prefix = $this->getRoutePrefix($input, $entity);
         $output->writeln(array(
@@ -195,59 +180,15 @@ EOT
     /**
      * Tries to generate forms if they don't exist yet and if we need write operations on entities.
      */
-    protected function generateForm($bundle, $entity, $metadata)
+    protected function generateForm($bundle, $entity, $metadata, array $tplOptions = [])
     {
         try {
             $generator = $this->getFormGenerator();
             $generator->setSrc($this->src);
+            $generator->setTplOptions($tplOptions);
             $generator->generate($bundle, $entity, $metadata[0]);
         } catch (\RuntimeException $e ) {
             // form already exists
-        }
-    }
-
-    protected function updateRouting($dialog, InputInterface $input, OutputInterface $output, $bundle, $format, $entity, $prefix)
-    {
-        $prefix = $this->getMainRoutePrefix($input, $entity);
-
-        $auto = true;
-        if ($input->isInteractive()) {
-            $auto = $dialog->askConfirmation($output, $dialog->getQuestion('Confirm automatic update of the Routing', 'yes', '?'), true);
-        }
-
-        $output->write('Importing the CRUD routes: ');
-        $this->getContainer()->get('filesystem')->mkdir($this->src.'/Resources/config/');
-        $routing = new RoutingManipulator($this->src.'/Resources/config/routing.xml');
-
-        $routeName = str_replace('\\', '_', $entity);
-        $routeName = preg_replace('/(.)([A-Z])/', '\1-\2', $routeName);
-        $routeName = strtolower($routeName);
-
-
-        $baseNs = $this->getContainer()->getParameter('dev_generator_tool.bundle.web.base_ns');
-
-        $bundleName = $baseNs.$this->outputBundle;
-
-        try {
-            $ret = $auto ? $routing->addResource($bundleName, $format, '/'.$prefix, 'routing/'.$routeName) : false;
-
-        } catch (\RuntimeException $exc) {
-            $ret = false;
-        }
-
-        if (!$ret) {
-
-            $help = sprintf("        <comment>resource: \"@%s/Resources/config/routing/%s.%s\"</comment>\n", $bundle->getName(), $routeName, $format);
-            $help .= sprintf("        <comment>prefix:   /%s</comment>\n", $prefix);
-
-            return array(
-                '- Import the bundle\'s routing resource in the bundle routing file',
-                sprintf('  (%s).', $this->src.'/Resources/config/routing.yml'),
-                '',
-                sprintf('    <comment>%s:</comment>', $bundle->getName().('' !== $prefix ? '_'.str_replace('/', '_', $prefix) : '')),
-                $help,
-                '',
-            );
         }
     }
 
@@ -297,7 +238,6 @@ EOT
     {
         if (null === $this->formGenerator) {
             $this->formGenerator = new DoctrineFormGenerator($this->getContainer()->get('filesystem'),  __DIR__.'/../Resources/skeleton/form');
-            $this->formGenerator->setOutputBundle($this->outputBundle);
         }
 
         return $this->formGenerator;

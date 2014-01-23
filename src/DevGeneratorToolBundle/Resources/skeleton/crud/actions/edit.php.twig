@@ -3,18 +3,14 @@
      * Displays a form to edit an existing {{ entity }} entity.
      * @param HttpFoundation\Request $request
      * @param integer $id
-     * @return HttpFoundation\Response
-{% if 'annotation' == format %}
-     * @Route("/{id}/edit", name="{{ route_name_prefix }}.edit")
-     * @Method("GET")
-     * @Template()
-{% endif %}
+     * @return HttpFoundation\RedirectResponse|HttpFoundation\Response
      */
     public function editAction(HttpFoundation\Request $request, $id)
     {
         $entity = $this->getEntity($id);
 
-        $editForm = $this->createForm(new {{ entity_class }}FormType(), $entity, ['method'=>'PUT']);
+        $formType = $this->get('entity.form.{{ entity_name }}.type');
+        $editForm = $this->createForm($formType, $entity, ['method'=>'PUT']);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
@@ -30,17 +26,8 @@
         $url = $this->generateUrl('{{ route_prefix }}.edit', ['id' => $entity->getId()]);
         $this->initBreadcrumb()->addItem('Edit', $url);
 
-{% if 'annotation' == format %}
-        return [
-            'entity'      => $entity,
-            'form'        => $editForm->createView(),
-{% if 'delete' in actions %}
-            'delete_form' => $this->createDeleteForm($id)->createView(),
-{% endif %}
-    ];
-{% else %}
         return $this->render(
-            '{{ namespace|replace({'\\': ''}) }}:{{ entity|replace({'\\': '/'}) }}:Crud/edit.html.twig', [
+            '{{ backend_bundle }}:{{ entity }}:Crud/edit.html.twig', [
                 'entity'       => $entity,
                 'form'         => $editForm->createView(),
 {% if 'delete' in actions %}
@@ -48,5 +35,4 @@
 {% endif %}
                 'context_menu' => $this->createContextMenu($entity)
         ]);
-{% endif %}
     }

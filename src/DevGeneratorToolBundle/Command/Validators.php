@@ -71,17 +71,6 @@ class Validators
         return '/' === substr($dir, -1, 1) ? $dir : $dir.'/';
     }
 
-    public static function validateFormat($format)
-    {
-        $format = strtolower($format);
-
-        if (!in_array($format, array('php', 'xml', 'yml', 'annotation'))) {
-            throw new \RuntimeException(sprintf('Format "%s" is not supported.', $format));
-        }
-
-        return $format;
-    }
-
     public static function validateEntityName($entity)
     {
         if (false === $pos = strpos($entity, ':')) {

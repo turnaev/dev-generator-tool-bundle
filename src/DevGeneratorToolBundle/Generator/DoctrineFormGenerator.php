@@ -9,23 +9,20 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 
 /**
  * Generates a form class based on a Doctrine entity.
- *
  */
 class DoctrineFormGenerator extends Generator
 {
     private $filesystem;
     private $skeletonDir;
-    private $className;
     private $classPath;
+    protected $tplOptions = [];
     protected $src;
-    protected $outputBundle;
+    protected $entity;
 
-    /**
-     * @param mixed $outputBundle
-     */
-    public function setOutputBundle($outputBundle)
+    public function __construct(Filesystem $filesystem, $skeletonDir)
     {
-        $this->outputBundle = $outputBundle;
+        $this->filesystem = $filesystem;
+        $this->skeletonDir = $skeletonDir;
     }
 
     /**
@@ -35,20 +32,12 @@ class DoctrineFormGenerator extends Generator
         $this->src = $src;
     }
 
-    public function __construct(Filesystem $filesystem, $skeletonDir)
+    /**
+     * @param array $tplOptions
+     */
+    public function setTplOptions(array $tplOptions)
     {
-        $this->filesystem = $filesystem;
-        $this->skeletonDir = $skeletonDir;
-    }
-
-    public function getClassName()
-    {
-        return $this->className;
-    }
-
-    public function getClassPath()
-    {
-        return $this->classPath;
+        $this->tplOptions = $tplOptions;
     }
 
     /**
@@ -60,37 +49,17 @@ class DoctrineFormGenerator extends Generator
      */
     public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata)
     {
-        $this->nameEntity  = strtolower($entity);
-
         if(is_null($this->src)) {
             $this->src = $bundle->getPath();
         }
 
-        if(is_null($this->outputBundle)) {
-            $this->outputBundle = $bundle->getName();
-        }
-
-        $baseNS = explode('\\', $bundle->getNamespace())[0];
-        $bundleNamespaceTarget = $baseNS.'\\'.$this->outputBundle;
-
-
-        $parts       = explode('\\', $entity);
-        $entityClass = array_pop($parts);
-
-        $this->className = $entityClass;
+        $this->entity = $entity;
         $dirPath         = $this->src.'/Form/Type';
         $this->classPath = $dirPath.'/'.str_replace('\\', '/', $entity).'FormType.php';
-
-        if (file_exists($this->classPath)) {
-            throw new \RuntimeException(sprintf('Unable to generate the %s form class as it already exists under the %s file', $this->className, $this->classPath));
-        }
 
         if (count($metadata->identifier) > 1) {
             throw new \RuntimeException('The form generator does not support entity classes with multiple primary keys.');
         }
-
-        $parts = explode('\\', $entity);
-        array_pop($parts);
 
         $fields           = $this->getFieldsFromMetadata($metadata);
         $maxColumnNameSize = 0;
@@ -98,18 +67,51 @@ class DoctrineFormGenerator extends Generator
             $maxColumnNameSize = max(strlen($field)+2, $maxColumnNameSize);
         }
 
-        $this->renderFile($this->skeletonDir, 'FormType.php.twig', $this->classPath, array(
-            'dir'              => $this->skeletonDir,
-            'fields'           => $fields,
-            'namespace'        => $bundle->getNamespace(),
-            'bundel_namespace_target'   => $bundleNamespaceTarget,
-            'entity_namespace' => implode('\\', $parts),
-            'entity_class'     => $entityClass,
-            'form_class'       => $this->className.'FormType',
-            'form_label'       => $entityClass,
-            'name_entity'   => $this->nameEntity,
-            'maxColumnNameSize' => $maxColumnNameSize,
-        ));
+        $options = array(
+            'fields'                  => $fields,
+            'form_class'              => $entity . 'FormType',
+            'form_label'              => $entity,
+            'max_column_name_size'    => $maxColumnNameSize,
+        );
+
+        $this->tplOptions = array_merge($this->tplOptions, $options);
+
+        $this->generateForm();
+        $this->generateServices();
+    }
+
+    /**
+     * Generates the routing configuration.
+     *
+     */
+    protected function generateForm()
+    {
+        $this->renderFile($this->skeletonDir, 'FormType.php.twig', $this->classPath, $this->tplOptions);
+    }
+
+    /**
+     * Generates the routing configuration.
+     *
+     */
+    protected function generateServices()
+    {
+        $target = sprintf(
+            '%s/Resources/config/services.xml',
+            $this->src
+        );
+
+        if(!file_exists($target)) {
+            $this->renderFile($this->skeletonDir.'/..', 'config/services.xml.twig', $target, $this->tplOptions);
+        }
+
+        $services = file_get_contents($target);
+
+        $key = "entity.form.{$this->tplOptions['entity_name']}.type";
+        if(!strpos($services, $key)) {
+            $service = $this->render($this->skeletonDir.'/..', 'config/service.xml.twig',  $this->tplOptions);
+            $services = str_replace('</services>', $service."\n    </services>", $services);
+            file_put_contents($target, $services);
+        }
     }
 
     /**

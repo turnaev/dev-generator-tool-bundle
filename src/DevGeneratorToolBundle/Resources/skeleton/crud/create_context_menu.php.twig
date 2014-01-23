@@ -1,13 +1,13 @@
 
     /**
-     * @param null|Currency $entity
+     * @param null|Entity\Currency $entity
      * @return \Knp\Menu\ItemInterface
      */
-    private function createContextMenu({{ entity }} $entity = null)
+    private function createContextMenu(Entity\{{ entity }} $entity = null)
     {
         $menuBuilder = $this->get('menu.context.builder');
 
-        $contextMenu = $menuBuilder->create('{{ name_entity }}', $entity);
+        $contextMenu = $menuBuilder->create('{{ entity_name }}', $entity);
 
         return $menuBuilder->init($contextMenu);
     }
