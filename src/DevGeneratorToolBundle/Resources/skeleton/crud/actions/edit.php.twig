@@ -19,8 +19,13 @@
             $em->persist($entity);
             $em->flush();
 
-            $url = $this->generateUrl('{{ route_prefix }}.show', ['id' => $entity->getId()]);
+            {% if 'show' in actions -%}
+                $url = $this->generateUrl('{{ route_prefix }}.show', ['id' => $entity->getId()]);
             return $this->redirect($url);
+            {%- else %}
+                return $this->redirect();
+            {% endif %}
+
         }
 
         $url = $this->generateUrl('{{ route_prefix }}.edit', ['id' => $entity->getId()]);

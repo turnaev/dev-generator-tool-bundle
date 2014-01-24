@@ -20,11 +20,10 @@
 
             {% if 'show' in actions -%}
                 $url = $this->generateUrl('{{ route_prefix }}.show', ['id' => $entity->getId()]);
-                return $this->redirect($url);
+            return $this->redirect($url);
             {%- else %}
-                $url = $this->generateUrl('{{ route_prefix }}');
                 return $this->redirect();
-            {%- endif %}
+            {% endif %}
 
         }
 
