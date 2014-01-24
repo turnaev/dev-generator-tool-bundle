@@ -4,6 +4,10 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
+    <route id="{{ route_prefix }}" pattern="/">
+        <default key="_controller">{{ backend_bundle }}:{{ entity }}:list</default>
+    </route>
+
     <route id="{{ route_prefix }}.list" pattern="/list">
         <default key="_controller">{{ backend_bundle }}:{{ entity }}:list</default>
     </route>
