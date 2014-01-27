@@ -9,7 +9,7 @@
     {
         $entity = $this->getEntity($id);
 
-        $formType = $this->get('entity.form.{{ entity_name }}.type');
+        $formType = $this->get('form.type.entity.{{ entity_name }}');
         $editForm = $this->createForm($formType, $entity, ['method'=>'PUT']);
         $editForm->handleRequest($request);
 

@@ -8,7 +8,7 @@
     {
         $entity  = new Entity\{{ entity }}();
 
-        $formType = $this->get('entity.form.{{ entity_name }}.type');
+        $formType = $this->get('form.type.entity.{{ entity_name }}');
         $form = $this->createForm($formType, $entity);
         $form->handleRequest($request);
 
