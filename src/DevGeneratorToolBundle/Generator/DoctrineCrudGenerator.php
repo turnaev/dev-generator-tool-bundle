@@ -138,7 +138,9 @@ class DoctrineCrudGenerator extends Generator
         }
 
         if($this->getContainer()->getParameter('dev_generator_tool.generate_translation')) {
-            $this->generateTranslation(sprintf('%s/Resources/translations', $this->src));
+            $fieldMappings = $this->getFieldMappings();
+            $g = new TranslationGenerator($this->filesystem, sprintf('%s/Resources/translations', $this->src), $entity, $fieldMappings);
+            $g->generate();
         }
 
         $this->generateConfiguration();
@@ -254,73 +256,7 @@ class DoctrineCrudGenerator extends Generator
         $this->renderFile($this->skeletonDir, 'views/edit.html.twig.twig', $dir.'/Crud/edit.html.twig', $this->tplOptions);
     }
 
-    protected function generateTranslation($dir)
-    {
-        if (!file_exists($dir)) {
-            $this->filesystem->mkdir($dir, 0777);
-        }
 
-        $fieldMappings = $this->getFieldMappings();
-        $trans = [];
-        foreach($fieldMappings as $fieldMapping) {
-            if($fieldMapping['fieldName'] != 'id') {
-                $trans[$fieldMapping['fieldName']] = $fieldMapping['label'];
-            }
-        }
-
-        $gt = new \DevConsoleToolBundle\Translater\GoogleTranslater();
-
-        foreach(['ru', 'en'] as $locale) {
-            $file = sprintf('%s/entity_%s.%s.yml', $dir, $this->entity, $locale);
-
-            if(!file_exists($file)) {
-                file_put_contents($file, "#Localization file for the entity {$this->entity}. Locale {$locale}.\n");
-            }
-            $comments = array_filter(file($file), function($str) {
-                return preg_match('/^#/', $str);
-            });
-            $comments = join("\n", $comments);
-
-            if($locale == 'ru') {
-
-                $translationsArr = \Symfony\Component\Yaml\Yaml::parse($file);
-
-                $translationsArr = $translationsArr ? $translationsArr : [];
-
-                foreach($trans as $key=>$tran) {
-
-                    if(!isset($translationsArr[$key])) {
-
-                        $gtTran = $gt->translateText($tran, $fromLanguage = 'en', $toLanguage = 'ru');
-
-                        if(!$gt->getErrors()) {
-                            $tran = $gtTran;
-                        } else {
-                            echo 'Translator error. '.$gt->getErrors();
-                        }
-
-                        $tran = ucfirst($tran);
-                        $translationsArr[$key] = $tran;
-                    }
-                }
-
-            } else {
-
-                $translationsArr = \Symfony\Component\Yaml\Yaml::parse($file);
-                $translationsArr = $translationsArr ? $translationsArr : [];
-                $translationsArr  = array_merge($trans, $translationsArr);
-            }
-
-            ksort($translationsArr);
-            if($translationsArr) {
-                $translationsYml = \Symfony\Component\Yaml\Yaml::dump($translationsArr);
-            } else {
-                $translationsYml = '';
-            }
-
-            file_put_contents($file, $comments.$translationsYml);
-        }
-    }
 
     /**
      * Returns an array of record actions to generate (edit, show).
@@ -340,7 +276,7 @@ class DoctrineCrudGenerator extends Generator
 
         foreach($fieldMappings as &$fieldMapping) {
             $fieldMapping['label'] = ucfirst(preg_replace('/_/', ' ', $fieldMapping['columnName']));
-            $fieldMapping['columnNameSize'] = strlen($fieldMapping['columnName']);
+            $fieldMapping['columnNameSize'] = strlen($fieldMapping['columnName'])+1;
         }
 
         ksort($fieldMappings);

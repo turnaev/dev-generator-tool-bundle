@@ -64,7 +64,7 @@ class DoctrineFormGenerator extends Generator
         $fields           = $this->getFieldsFromMetadata($metadata);
         $maxColumnNameSize = 0;
         foreach($fields as $field) {
-            $maxColumnNameSize = max(strlen($field)+2, $maxColumnNameSize);
+            $maxColumnNameSize = max($field['columnNameSize']+2, $maxColumnNameSize);
         }
 
         $options = array(
@@ -78,6 +78,9 @@ class DoctrineFormGenerator extends Generator
 
         $this->generateForm();
         $this->generateServices();
+
+        $g = new TranslationGenerator($this->filesystem, sprintf('%s/Resources/translations', $this->src), $entity, $fields);
+        $g->generate();
     }
 
     /**
@@ -114,6 +117,8 @@ class DoctrineFormGenerator extends Generator
         }
     }
 
+
+
     /**
      * Returns an array of fields. Fields can be both column fields and
      * association fields.
@@ -123,19 +128,37 @@ class DoctrineFormGenerator extends Generator
      */
     private function getFieldsFromMetadata(ClassMetadataInfo $metadata)
     {
-        $fields = (array) $metadata->fieldNames;
+        $fields = $this->tplOptions['fields'];
 
-        // Remove the primary key field if it's not managed manually
+
         if (!$metadata->isIdentifierNatural()) {
-            $fields = array_diff($fields, $metadata->identifier);
+            foreach($metadata->identifier as $id) {
+                unset($fields[$id]);
+            }
         }
 
         foreach ($metadata->associationMappings as $fieldName => $relation) {
             if ($relation['type'] !== ClassMetadataInfo::ONE_TO_MANY) {
-                $fields[] = $fieldName;
+
+                $label = preg_replace('/([A-Z])/', ' \1', $fieldName);
+
+                $label = trim($label);
+                $label =  strtolower($label);
+                $label = ucfirst($label);
+
+                $fields[$fieldName] = [
+
+                    'fieldName' => $fieldName,
+                    'type' => $relation['targetEntity'],
+                    'columnName' => $fieldName,
+                    'length' => null,
+                    'nullable' => '',
+                    'label' => $label,
+                    'columnNameSize' => strlen($fieldName),
+
+                ];
             }
         }
-        asort($fields);
 
         return $fields;
     }

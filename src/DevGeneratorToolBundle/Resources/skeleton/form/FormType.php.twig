@@ -18,7 +18,7 @@ class {{ form_class }} extends AbstractType implements \Symfony\Component\Depend
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder{{ "\n" }}{%- for field in fields %}
-            ->add({{ format|format("'" ~field ~ "'") }}, null, ['label'=>{{ format|format("'" ~field ~ "'") }}, 'translation_domain' => 'entity_{{ entity }}']){{ "\n" }}
+            ->add({{ format|format("'" ~field.fieldName ~ "'") }}, null, ['label'=>{{ format|format("'" ~field.label ~ "'") }}, 'translation_domain' => 'entity_{{ entity }}']){{ "\n" }}
         {%- endfor %}
         ;
     }

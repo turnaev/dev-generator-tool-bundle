@@ -11,9 +11,9 @@
         $columns = [
         {% for field, metadata in fields %}
 {% if field == 'id' %}
-{% set d= "" %}
+    {% set d= "" %}
 {% else %}
-{% set d= "'translation_domain' => 'entity_" ~ entity ~ "'" %}
+    {% set d= "'title'=>'"~ metadata.label ~"', 'translation_domain' => 'entity_" ~ entity ~ "'" %}
 {% endif %}
 {{ format|format("'" ~ field ~ "'", "[" ~ d ~ "],") }}
         {% endfor %}
