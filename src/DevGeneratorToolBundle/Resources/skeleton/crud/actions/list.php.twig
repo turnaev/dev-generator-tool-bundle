@@ -42,7 +42,6 @@
 
             $response = $gridBuilder->getGridResponse(
                 '{{ backend_bundle }}:{{  entity }}:Crud/list.html.twig', [
-                    'with_ajax'    => true,
                     'context_menu' => $this->createContextMenu()
                 ]
             );
