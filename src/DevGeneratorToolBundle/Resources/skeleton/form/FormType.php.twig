@@ -18,8 +18,7 @@ class {{ form_class }} extends AbstractType implements \Symfony\Component\Depend
     {
         $builder{{ "\n" }}{%- for field in fields %}
             ->add('{{ field.fieldName }}', null, [
-                    'label'              => '{{ field.label }}',
-                    'translation_domain' => 'entity_{{ entity }}']){{ "\n" }}
+                    'label' => '{{ field.label }}']){{ "\n" }}
         {%- endfor %}
         ;
     }
@@ -30,9 +29,9 @@ class {{ form_class }} extends AbstractType implements \Symfony\Component\Depend
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => '{{ core_bundle_ns }}\Entity\{{ entity }}',
-            'label'      => '{{ form_label }}',
-        ]);
+            'data_class'         => '{{ core_bundle_ns }}\Entity\{{ entity }}',
+            'label'              => '{{ form_label }}',
+            'translation_domain' => 'entity_{{ entity }}']);
     }
 
     /**
