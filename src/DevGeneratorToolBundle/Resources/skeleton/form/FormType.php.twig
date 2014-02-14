@@ -5,6 +5,7 @@ namespace {{ backend_bundle_ns }}\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
 {% set format = "%-" ~ max_column_name_size ~ "s" %}
 
 class {{ form_class }} extends AbstractType implements \Symfony\Component\DependencyInjection\ContainerAwareInterface
@@ -18,7 +19,9 @@ class {{ form_class }} extends AbstractType implements \Symfony\Component\Depend
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder{{ "\n" }}{%- for field in fields %}
-            ->add({{ format|format("'" ~field.fieldName ~ "'") }}, null, ['label'=>{{ format|format("'" ~field.label ~ "'") }}, 'translation_domain' => 'entity_{{ entity }}']){{ "\n" }}
+            ->add('{{ field.fieldName }}', null, [
+                    'label'              => '{{ field.label }}',
+                    'translation_domain' => 'entity_{{ entity }}']){{ "\n" }}
         {%- endfor %}
         ;
     }
