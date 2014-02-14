@@ -6,26 +6,22 @@
     public function listAction(HttpFoundation\Request $request)
     {
         $gridBuilder = $this->get('grid.builder');
-{% set format = "             %-" ~ (max_column_name_size+1) ~ "s => %s" %}
+{% set format = "        %-" ~ (max_column_name_size+1) ~ "s => %s" %}
 
         $columns = [
-        {% for field, metadata in fields %}
-{% if field == 'id' %}
-    {% set d= "" %}
-{% else %}
-    {% set d= "'title'=>'"~ metadata.label ~"', 'translation_domain' => 'entity_" ~ entity ~ "'" %}
-{% endif %}
-{{ format|format("'" ~ field ~ "'", "[" ~ d ~ "],") }}
-        {% endfor %}
-        ];
+    {% for field, metadata in fields %}
+{{ format|format("'" ~ field ~ "'", "['title' => '"~ metadata.label ~"'],") }}
+    {% endfor %}
+    ];
 
         $queryBuilder = $this->getRepository('{{ core_bundle }}:{{ entity }}')
             ->createQueryBuilder('i')
         ;
+
         $gridBuilder
             ->setGridId('{{ entity_name }}_grid')
             ->setRouteUrl($this->generateUrl('{{ route_prefix }}.list'))
-            ->setSource($queryBuilder, $columns)
+            ->setSource($queryBuilder, $columns, ['translation_domain' => 'entity_{{ entity }}'])
             ->setRowActions([
                 [null, '{{ route_prefix }}.show', false, '_self', ['icon'=>'icon-eye',  'title'=>'Detail']],
                 [null, '{{ route_prefix }}.edit', false, '_self', ['icon'=>'icon-edit', 'title'=>'Edit']],
