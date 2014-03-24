@@ -10,7 +10,11 @@
 
         $columns = [
     {% for field, metadata in fields %}
-{{ format|format("'" ~ field ~ "'", "['title' => '"~ metadata.label ~"'],") }}
+{% if field == 'id' -%}
+    {{ format|format("'" ~ field ~ "'", "[],") }}
+{% else -%}
+    {{ format|format("'" ~ field ~ "'", "['title' => '"~ metadata.label ~"'],") }}
+{% endif %}
     {% endfor %}
     ];
 
