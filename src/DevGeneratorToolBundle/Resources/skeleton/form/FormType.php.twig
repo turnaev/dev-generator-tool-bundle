@@ -3,12 +3,14 @@
 namespace {{ backend_bundle_ns }}\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\DependencyInjection;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+//use Symfony\Component\Form;
 
-class {{ form_class }} extends AbstractType implements \Symfony\Component\DependencyInjection\ContainerAwareInterface
+class {{ form_class }} extends AbstractType implements DependencyInjection\ContainerAwareInterface
 {
-    use \{{ core_bundle_ns }}\Form\Type\FormTypeContainerableTrait;
+    use FormTypeContainerableTrait;
 
     /**
      * @param FormBuilderInterface $builder
@@ -16,11 +18,19 @@ class {{ form_class }} extends AbstractType implements \Symfony\Component\Depend
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        ///** @var {{ core_bundle_ns }}\Entity\{{ entity }} $entity */
+        //$entity = $builder->getData();
+
         $builder{{ "\n" }}{%- for field in fields %}
             ->add('{{ field.fieldName }}', null, [
                     'label' => '{{ field.label }}']){{ "\n" }}
         {%- endfor %}
         ;
+
+        //$builder->addEventListener(Form\FormEvents::SUBMIT,
+        //    function (Form\FormEvent $event)  {
+        //    }
+        //);
     }
 
     /**
