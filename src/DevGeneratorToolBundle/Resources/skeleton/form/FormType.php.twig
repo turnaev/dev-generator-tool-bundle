@@ -23,7 +23,8 @@ class {{ form_class }} extends AbstractType implements DependencyInjection\Conta
 
         $builder{{ "\n" }}{%- for field in fields %}
             ->add('{{ field.fieldName }}', null, [
-                    'label' => '{{ field.label }}']){{ "\n" }}
+                    'label' => '{{ field.label }}'
+                ]){{ "\n" }}
         {%- endfor %}
         ;
 
