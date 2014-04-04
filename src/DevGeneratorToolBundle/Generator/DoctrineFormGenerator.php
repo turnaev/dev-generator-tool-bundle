@@ -129,6 +129,12 @@ class DoctrineFormGenerator extends Generator
     private function getFieldsFromMetadata(ClassMetadataInfo $metadata)
     {
         $fields = $this->tplOptions['fields'];
+        foreach($fields as &$field) {
+
+            if(in_array($field['type'], ['date', 'datetime', 'dateinterval', 'string_array'])) {
+                $field['formType'] = $field['type'];
+            }
+        }
 
 
         if (!$metadata->isIdentifierNatural()) {
