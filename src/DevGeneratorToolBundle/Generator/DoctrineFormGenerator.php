@@ -161,8 +161,6 @@ class DoctrineFormGenerator extends Generator
                     'nullable' => '',
                     'label' => $label,
                     'columnNameSize' => strlen($fieldName),
-                    'formType'=>'choice',
-
                 ];
             }
         }
