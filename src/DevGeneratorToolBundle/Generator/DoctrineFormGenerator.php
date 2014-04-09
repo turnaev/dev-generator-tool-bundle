@@ -136,7 +136,6 @@ class DoctrineFormGenerator extends Generator
             }
         }
 
-
         if (!$metadata->isIdentifierNatural()) {
             foreach($metadata->identifier as $id) {
                 unset($fields[$id]);
@@ -161,6 +160,7 @@ class DoctrineFormGenerator extends Generator
                     'nullable' => '',
                     'label' => $label,
                     'columnNameSize' => strlen($fieldName),
+                    'formType'=> 'objectChoice'
                 ];
             }
         }

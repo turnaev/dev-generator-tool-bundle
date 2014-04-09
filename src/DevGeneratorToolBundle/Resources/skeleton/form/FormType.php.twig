@@ -22,9 +22,9 @@ class {{ form_class }} extends AbstractType implements DependencyInjection\Conta
         //$entity = $builder->getData();
 
         $builder{{ "\n" }}{%- for field in fields %}
-            ->add('{{ field.fieldName }}', {{ (field.formType is defined) ? "'"~field.formType~"'": 'null' }}, [
+            ->add('{{ field.fieldName }}', {{ (field.formType is defined and field.formType!='objectChoice') ? "'"~field.formType~"'": 'null' }}, [
                     /* {{ field.type }} */
-                {% if field.formType is defined and field.formType == 'choice' %}
+                {% if field.formType is defined and (field.formType=='choice' or field.formType=='objectChoice') %}
     'label'       => '{{ field.label }}',
                     'empty_value' => '',
                 {% else %}
