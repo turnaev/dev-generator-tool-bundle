@@ -48,7 +48,7 @@ class {{ form_class }} extends AbstractType implements DependencyInjection\Conta
         $resolver->setDefaults([
             'data_class'         => '{{ core_bundle_ns }}\Entity\{{ entity }}',
             'label'              => '{{ form_label }}',
-            'translation_domain' => 'entity_{{ entity }}']);
+            'translation_domain' => '{{ entity }}']);
     }
 
     /**
