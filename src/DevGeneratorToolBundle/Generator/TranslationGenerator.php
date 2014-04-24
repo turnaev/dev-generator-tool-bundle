@@ -54,8 +54,8 @@ class TranslationGenerator {
 
         $gt = new \DevConsoleToolBundle\Translater\GoogleTranslater();
 
-        foreach(['ru', 'en'] as $locale) {
-            $file = sprintf('%s/entity_%s.%s.yml', $this->dir, $this->entity, $locale);
+        foreach(['ru'] as $locale) {
+            $file = sprintf('%s/%s.%s.yml', $this->dir, $this->entity, $locale);
 
             if(!file_exists($file)) {
                 file_put_contents($file, "#Localization file for the entity {$this->entity}. Locale {$locale}.\n");
