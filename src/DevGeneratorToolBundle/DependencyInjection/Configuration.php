@@ -17,14 +17,18 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
+        $skeletonDir = realpath(__DIR__.'/../Resources/skeleton');
+
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('dev_generator_tool');
         $rootNode
             ->children()
+                ->scalarNode('dir_skeleton')->defaultValue($skeletonDir)->end()
                 ->arrayNode('bundle')
                     ->children()
                         ->scalarNode('core_path')->defaultValue('LP/CoreBundle')->end()
                         ->scalarNode('web_path')->defaultValue('LP/WebBundle')->end()
+
                     ->end()
                 ->end()
             ->scalarNode('generate_translation')->defaultValue(false)->end()

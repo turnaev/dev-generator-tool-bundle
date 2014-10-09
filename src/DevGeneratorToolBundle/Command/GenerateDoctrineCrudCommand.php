@@ -220,7 +220,9 @@ EOT
     protected function getGenerator()
     {
         if (null === $this->generator) {
-            $this->generator = new DoctrineCrudGenerator($this->getContainer()->get('filesystem'), __DIR__.'/../Resources/skeleton/crud');
+            $container = $this->getContainer();
+            $dirSkeleton = $container->getParameter('dev_generator_tool.dir_skeleton');
+            $this->generator = new DoctrineCrudGenerator($container->get('filesystem'), $dirSkeleton.'/crud');
             $this->generator->setContainer($this->getContainer());
 
         }
@@ -237,7 +239,9 @@ EOT
     protected function getFormGenerator()
     {
         if (null === $this->formGenerator) {
-            $this->formGenerator = new DoctrineFormGenerator($this->getContainer()->get('filesystem'),  __DIR__.'/../Resources/skeleton/form');
+            $container = $this->getContainer();
+            $dirSkeleton = $container->getParameter('dev_generator_tool.dir_skeleton');
+            $this->formGenerator = new DoctrineFormGenerator($container->get('filesystem'),  $dirSkeleton.'/form');
         }
 
         return $this->formGenerator;

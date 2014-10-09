@@ -14,7 +14,7 @@
         {% if field in ['id'] %}
 <th>{{ "{{ '" ~ field ~ "'|trans }}" }}</th>
 {% else %}
-<th>{{ "{{ '" ~ field ~ "'|trans({}, 'entity_" ~ entity~ "') }}" }}</th>
+<th>{{ "{{ '" ~ field ~ "'|trans({}, '" ~ entity~ "') }}" }}</th>
 {% endif %}
         <td>{% spaceless %}
             {% if metadata.type in ['date', 'datetime'] %}

@@ -25,7 +25,7 @@
         $gridBuilder
             ->setGridId('{{ entity_name }}_grid')
             ->setRouteUrl($this->generateUrl('{{ route_prefix }}.list'))
-            ->setSource($queryBuilder, $columns, ['translation_domain' => 'entity_{{ entity }}'])
+            ->setSource($queryBuilder, $columns, ['translation_domain' => '{{ entity }}'])
             ->setRowActions([
                 [null, '{{ route_prefix }}.show', false, '_self', ['icon'=>'icon-eye',  'title'=>'Detail']],
                 [null, '{{ route_prefix }}.edit', false, '_self', ['icon'=>'icon-edit', 'title'=>'Edit']],

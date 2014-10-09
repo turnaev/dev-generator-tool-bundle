@@ -28,6 +28,9 @@ class DevGeneratorToolExtension extends Extension
         //generate_translation
         $container->setParameter('dev_generator_tool.generate_translation', $config['generate_translation']);
 
+        //dir_skeleton
+        $container->setParameter('dev_generator_tool.dir_skeleton', $config['dir_skeleton']);
+
         //core
         $container->setParameter('dev_generator_tool.bundle.core.path', $config['bundle']['core_path']);
 
