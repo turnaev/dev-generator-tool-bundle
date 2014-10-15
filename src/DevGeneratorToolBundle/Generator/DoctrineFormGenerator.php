@@ -68,10 +68,10 @@ class DoctrineFormGenerator extends Generator
         }
 
         $options = array(
-            'fields'                  => $fields,
-            'form_class'              => $entity . 'FormType',
-            'form_label'              => $entity,
-            'max_column_name_size'    => $maxColumnNameSize,
+            'fields'               => $fields,
+            'form_class'           => $entity . 'FormType',
+            'form_label'           => $entity,
+            'max_column_name_size' => $maxColumnNameSize,
         );
 
         $this->tplOptions = array_merge($this->tplOptions, $options);
@@ -131,7 +131,7 @@ class DoctrineFormGenerator extends Generator
         $fields = $this->tplOptions['fields'];
         foreach($fields as &$field) {
 
-            if(in_array($field['type'], ['date', 'datetime', 'dateinterval', 'string_array'])) {
+            if(in_array($field['type'], ['date', 'datetime', 'dateinterval', 'string_array', 'integer_array'])) {
                 $field['formType'] = $field['type'];
             }
         }
@@ -153,14 +153,14 @@ class DoctrineFormGenerator extends Generator
 
                 $fields[$fieldName] = [
 
-                    'fieldName' => $fieldName,
-                    'type' => $relation['targetEntity'],
-                    'columnName' => $fieldName,
-                    'length' => null,
-                    'nullable' => '',
-                    'label' => $label,
+                    'fieldName'      => $fieldName,
+                    'type'           => $relation['targetEntity'],
+                    'columnName'     => $fieldName,
+                    'length'         => null,
+                    'nullable'       => '',
+                    'label'          => $label,
                     'columnNameSize' => strlen($fieldName),
-                    'formType'=> 'objectChoice'
+                    'formType'       => 'objectChoice'
                 ];
             }
         }
