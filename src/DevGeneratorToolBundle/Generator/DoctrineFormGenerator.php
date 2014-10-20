@@ -112,7 +112,7 @@ class DoctrineFormGenerator extends Generator
         $key = "entity.form.{$this->tplOptions['entity_name']}.type";
         if(!strpos($services, $key)) {
             $service = $this->render($this->skeletonDir.'/..', 'config/service.xml.twig',  $this->tplOptions);
-            $services = str_replace('</services>', $service."\n    </services>", $services);
+            $services = str_replace('</services>', $service."</services>", $services);
             file_put_contents($target, $services);
         }
     }
