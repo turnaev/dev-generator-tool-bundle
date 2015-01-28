@@ -10,11 +10,7 @@
 
         $columns = [
     {% for field, metadata in fields %}
-{% if field == 'id' -%}
-    {{ format|format("'" ~ field ~ "'", "[],") }}
-{% else -%}
-    {{ format|format("'" ~ field ~ "'", "['title' => '"~ metadata.label ~"'],") }}
-{% endif %}
+    {{ format|format("'" ~ field ~ "'", "null,") }}
     {% endfor %}
     ];
 
@@ -27,8 +23,8 @@
             ->setRouteUrl($this->generateUrl('{{ route_prefix }}.list'))
             ->setSource($queryBuilder, $columns, ['translation_domain' => '{{ entity }}'])
             ->setRowActions([
-                [null, '{{ route_prefix }}.show', false, '_self', ['icon'=>'icon-eye',  'title'=>'Detail']],
-                [null, '{{ route_prefix }}.edit', false, '_self', ['icon'=>'icon-edit', 'title'=>'Edit']],
+                [null, '{{ route_prefix }}.show', false, '_self', ['icon'=>'fa fa-eye',  'title'=>'Detail']],
+                [null, '{{ route_prefix }}.edit', false, '_self', ['icon'=>'fa fa-edit', 'title'=>'Edit']],
             ]);
 
         if($request->isXmlHttpRequest()) {

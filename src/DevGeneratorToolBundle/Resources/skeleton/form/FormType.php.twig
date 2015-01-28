@@ -3,17 +3,12 @@
 namespace {{ backend_bundle_ns }}\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\DependencyInjection;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 //use Symfony\Component\Form;
 
-use {{ backend_bundle_ns }}\Type;
-
-class {{ form_class }} extends AbstractType implements DependencyInjection\ContainerAwareInterface
+abstract class {{ form_class }} extends AbstractType
 {
-    use Type\ContainerableTrait;
-
     /**
      * @param FormBuilderInterface $builder
      * @param array                $options

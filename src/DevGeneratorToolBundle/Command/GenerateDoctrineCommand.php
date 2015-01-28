@@ -3,7 +3,7 @@
 
 namespace DevGeneratorToolBundle\Command;
 
-use Doctrine\Bundle\DoctrineBundle\Mapping\MetadataFactory;
+use Doctrine\Bundle\DoctrineBundle\Mapping\DisconnectedMetadataFactory as MetadataFactory;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
 abstract class GenerateDoctrineCommand extends ContainerAwareCommand
