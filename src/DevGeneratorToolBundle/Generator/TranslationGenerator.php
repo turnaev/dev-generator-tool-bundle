@@ -45,16 +45,15 @@ class TranslationGenerator {
         }
 
         $trans = [];
-        foreach($this->fieldMappings as $fieldMapping) {
 
-            if($fieldMapping['fieldName'] != 'id') {
-                $trans[$fieldMapping['label']] = $fieldMapping['label'];
-            }
+        $trans[$this->entity] = $this->entity;
+        foreach($this->fieldMappings as $fieldMapping) {
+            $trans[$fieldMapping['fieldName']] = $fieldMapping['label'];
         }
 
         $gt = new \DevConsoleToolBundle\Translater\GoogleTranslater();
 
-        foreach(['ru'] as $locale) {
+        foreach(['ru', 'en'] as $locale) {
             $file = sprintf('%s/%s.%s.yml', $this->dir, $this->entity, $locale);
 
             if(!file_exists($file)) {
