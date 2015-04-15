@@ -1,24 +1,17 @@
 
     /**
      * Deletes a {{ entity }} entity.
+     *
      * @param HttpFoundation\Request $request
-     * @param integer $id
+     * @param int $id
+     *
      * @return HttpFoundation\RedirectResponse
      */
     public function deleteAction(HttpFoundation\Request $request, $id)
     {
-        $form = $this->createDeleteForm($id);
-        $form->submit($request);
-
-        if ($form->isValid()) {
-
-            $entity = $this->getEntity($id);
-
-            $em   = $this->getEntityManager();
-            $em->remove($entity);
-            $em->flush();
-        }
+        $this->deleteEntity($request, $id);
 
         $url = $this->generateUrl('{{ route_prefix }}.list');
+
         return $this->redirect($url);
     }

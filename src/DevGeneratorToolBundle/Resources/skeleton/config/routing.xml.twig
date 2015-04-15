@@ -11,18 +11,18 @@
     <route id="{{ route_prefix }}.list" pattern="/list">
         <default key="_controller">{{ backend_bundle }}:{{ entity }}:list</default>
     </route>
-    {% if 'new' in actions %}
+{%if 'new' in actions %}
 
     <route id="{{ route_prefix }}.create" pattern="/create">
         <default key="_controller">{{ backend_bundle }}:{{ entity }}:create</default>
     </route>
-    {% endif %}
+{% endif %}
 
     <route id="{{ route_prefix }}.show" pattern="/{id}/show">
         <default key="_controller">{{ backend_bundle }}:{{ entity }}:show</default>
         <requirement key="id">\d+</requirement>
     </route>
-{% if 'edit' in actions %}
+{%if 'edit' in actions %}
 
     <route id="{{ route_prefix }}.edit" pattern="/{id}/edit">
         <default key="_controller">{{ backend_bundle }}:{{ entity }}:edit</default>

@@ -1,6 +1,9 @@
 
     /**
      * List all {{ entity }} entities.
+     *
+     * @param HttpFoundation\Request $request
+     *
      * @return HttpFoundation\Response
      */
     public function listAction(HttpFoundation\Request $request)
@@ -23,25 +26,20 @@
             ->setRouteUrl($this->generateUrl('{{ route_prefix }}.list'))
             ->setSource($queryBuilder, $columns, ['translation_domain' => '{{ entity }}'])
             ->setRowActions([
-                [null, '{{ route_prefix }}.show', false, '_self', ['icon'=>'fa fa-eye',  'title'=>'Detail']],
-                [null, '{{ route_prefix }}.edit', false, '_self', ['icon'=>'fa fa-edit', 'title'=>'Edit']],
+                [null, '{{ route_prefix }}.show', false, '_self', ['icon' => 'fa fa-eye',  'title' => 'Detail']],
+                [null, '{{ route_prefix }}.edit', false, '_self', ['icon' => 'fa fa-edit', 'title' => 'Edit']],
             ]);
 
-        if($request->isXmlHttpRequest()) {
-
-            $response = $gridBuilder->getGridResponse(
-                '{{ backend_bundle }}:{{ entity }}:Crud/list.html.twig'
-            );
-        } else {
-
+        $viewData = [];
+        if (!$request->isXmlHttpRequest()) {
             $this->initBreadcrumb();
-
-            $response = $gridBuilder->getGridResponse(
-                '{{ backend_bundle }}:{{  entity }}:Crud/list.html.twig', [
-                    'context_menu' => $this->createContextMenu()
-                ]
-            );
+            $viewData = [
+                'context_menu' => $this->createContextMenu(),
+            ];
         }
 
-        return $response;
+        return $gridBuilder->getGridResponse(
+            '{{ backend_bundle }}:{{  entity }}:Crud/list.html.twig',
+            $viewData
+        );
     }

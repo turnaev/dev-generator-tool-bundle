@@ -1,6 +1,5 @@
 <?php
 
-
 namespace DevGeneratorToolBundle\Generator;
 
 use Symfony\Component\Filesystem\Filesystem;
@@ -28,7 +27,8 @@ class DoctrineFormGenerator extends Generator
     /**
      * @param string $src
      */
-    public function setSrc($src) {
+    public function setSrc($src)
+    {
         $this->src = $src;
     }
 
@@ -49,7 +49,7 @@ class DoctrineFormGenerator extends Generator
      */
     public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata)
     {
-        if(is_null($this->src)) {
+        if (is_null($this->src)) {
             $this->src = $bundle->getPath();
         }
 
@@ -63,13 +63,13 @@ class DoctrineFormGenerator extends Generator
 
         $fields           = $this->getFieldsFromMetadata($metadata);
         $maxColumnNameSize = 0;
-        foreach($fields as $field) {
-            $maxColumnNameSize = max($field['columnNameSize']+2, $maxColumnNameSize);
+        foreach ($fields as $field) {
+            $maxColumnNameSize = max($field['columnNameSize'] + 2, $maxColumnNameSize);
         }
 
         $options = array(
             'fields'               => $fields,
-            'form_class'           => $entity . 'FormType',
+            'form_class'           => $entity.'FormType',
             'form_label'           => $entity,
             'max_column_name_size' => $maxColumnNameSize,
         );
@@ -85,7 +85,6 @@ class DoctrineFormGenerator extends Generator
 
     /**
      * Generates the routing configuration.
-     *
      */
     protected function generateForm()
     {
@@ -94,7 +93,6 @@ class DoctrineFormGenerator extends Generator
 
     /**
      * Generates the routing configuration.
-     *
      */
     protected function generateServices()
     {
@@ -103,48 +101,45 @@ class DoctrineFormGenerator extends Generator
             $this->src
         );
 
-        if(!file_exists($target)) {
+        if (!file_exists($target)) {
             $this->renderFile($this->skeletonDir.'/..', 'config/services.xml.twig', $target, $this->tplOptions);
         }
 
         $services = file_get_contents($target);
 
         $key = "entity.form.{$this->tplOptions['entity_name']}.type";
-        if(!strpos($services, $key)) {
-            $service = $this->render($this->skeletonDir.'/..', 'config/service.xml.twig',  $this->tplOptions);
-            $services = str_replace('</services>', $service."</services>", $services);
+        if (!strpos($services, $key)) {
+            $service = $this->render($this->skeletonDir.'/..', 'config/service.xml.twig', $this->tplOptions);
+            $services = str_replace('</services>', $service.'</services>', $services);
             file_put_contents($target, $services);
         }
     }
-
-
 
     /**
      * Returns an array of fields. Fields can be both column fields and
      * association fields.
      *
      * @param ClassMetadataInfo $metadata
+     *
      * @return array $fields
      */
     private function getFieldsFromMetadata(ClassMetadataInfo $metadata)
     {
         $fields = $this->tplOptions['fields'];
-        foreach($fields as &$field) {
-
-            if(in_array($field['type'], ['date', 'datetime', 'dateinterval', 'string_array', 'integer_array'])) {
+        foreach ($fields as &$field) {
+            if (in_array($field['type'], ['date', 'datetime', 'dateinterval', 'string_array', 'integer_array'])) {
                 $field['formType'] = $field['type'];
             }
         }
 
         if (!$metadata->isIdentifierNatural()) {
-            foreach($metadata->identifier as $id) {
+            foreach ($metadata->identifier as $id) {
                 unset($fields[$id]);
             }
         }
 
         foreach ($metadata->associationMappings as $fieldName => $relation) {
             if ($relation['type'] !== ClassMetadataInfo::ONE_TO_MANY) {
-
                 $label = preg_replace('/([A-Z])/', ' \1', $fieldName);
 
                 $label = trim($label);
@@ -160,7 +155,7 @@ class DoctrineFormGenerator extends Generator
                     'nullable'       => '',
                     'label'          => $label,
                     'columnNameSize' => strlen($fieldName),
-                    'formType'       => 'objectChoice'
+                    'formType'       => 'objectChoice',
                 ];
             }
         }

@@ -1,11 +1,9 @@
 <?php
 
-
 namespace DevGeneratorToolBundle\Command;
 
 /**
  * Validator functions.
- *
  */
 class Validators
 {

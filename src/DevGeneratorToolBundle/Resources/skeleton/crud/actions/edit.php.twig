@@ -1,8 +1,10 @@
 
     /**
      * Displays a form to edit an existing {{ entity }} entity.
+     *
      * @param HttpFoundation\Request $request
-     * @param integer $id
+     * @param int                    $id
+     *
      * @return HttpFoundation\RedirectResponse|HttpFoundation\Response
      */
     public function editAction(HttpFoundation\Request $request, $id)
@@ -10,17 +12,17 @@
         $entity = $this->getEntity($id);
 
         $formType = $this->get('form.type.entity.{{ entity_name }}');
-        $editForm = $this->createForm($formType, $entity, ['method'=>'PUT']);
+        $editForm = $this->createForm($formType, $entity, ['method' => 'PUT']);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
-
             $em = $this->getEntityManager();
             $em->persist($entity);
             $em->flush();
 
             {% if 'show' in actions -%}
                 $url = $this->generateUrl('{{ route_prefix }}.show', ['id' => $entity->getId()]);
+
             return $this->redirect($url);
             {%- else %}
                 return $this->redirect();
@@ -38,6 +40,6 @@
 {% if 'delete' in actions %}
                 'delete_form'  => $this->createDeleteForm($id)->createView(),
 {% endif %}
-                'context_menu' => $this->createContextMenu($entity)
+                'context_menu' => $this->createContextMenu($entity),
         ]);
     }

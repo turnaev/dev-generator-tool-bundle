@@ -2,7 +2,7 @@
     /**
      * @return \WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs
      */
-    private  function initBreadcrumb()
+    protected function initBreadcrumb()
     {
         $listUrl = $this->generateUrl('{{ route_prefix }}.list');
 

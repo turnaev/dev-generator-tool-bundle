@@ -1,6 +1,5 @@
 <?php
 
-
 namespace DevGeneratorToolBundle\Command\Helper;
 
 use Symfony\Component\Console\Helper\DialogHelper as BaseDialogHelper;
@@ -8,7 +7,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Generates bundles.
- *
  */
 class DialogHelper extends BaseDialogHelper
 {

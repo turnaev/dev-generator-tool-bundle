@@ -1,12 +1,11 @@
 <?php
 
-
 namespace DevGeneratorToolBundle\Generator;
 
 use Symfony\Component\Filesystem\Filesystem;
 
-class TranslationGenerator {
-
+class TranslationGenerator
+{
     /**
      * @var Filesystem
      */
@@ -26,9 +25,9 @@ class TranslationGenerator {
 
     /**
      * @param Filesystem $filesystem
-     * @param string $dir
-     * @param string $entity
-     * @param array  $fieldMappings
+     * @param string     $dir
+     * @param string     $entity
+     * @param array      $fieldMappings
      */
     public function __construct(Filesystem $filesystem, $dir, $entity, array $fieldMappings = [])
     {
@@ -47,36 +46,33 @@ class TranslationGenerator {
         $trans = [];
 
         $trans[$this->entity] = $this->entity;
-        foreach($this->fieldMappings as $fieldMapping) {
+        foreach ($this->fieldMappings as $fieldMapping) {
             $trans[$fieldMapping['fieldName']] = $fieldMapping['label'];
         }
 
         $gt = new \DevConsoleToolBundle\Translater\GoogleTranslater();
 
-        foreach(['ru', 'en'] as $locale) {
+        foreach (['ru', 'en'] as $locale) {
             $file = sprintf('%s/%s.%s.yml', $this->dir, $this->entity, $locale);
 
-            if(!file_exists($file)) {
+            if (!file_exists($file)) {
                 file_put_contents($file, "#Localization file for the entity {$this->entity}. Locale {$locale}.\n");
             }
-            $comments = array_filter(file($file), function($str) {
+            $comments = array_filter(file($file), function ($str) {
                 return preg_match('/^#/', $str);
             });
-            $comments = join("\n", $comments);
+            $comments = implode("\n", $comments);
 
-            if($locale == 'ru') {
-
+            if ($locale == 'ru') {
                 $translationsArr = \Symfony\Component\Yaml\Yaml::parse($file);
 
                 $translationsArr = $translationsArr ? $translationsArr : [];
 
-                foreach($trans as $key=>$tran) {
-
-                    if(!isset($translationsArr[$key])) {
-
+                foreach ($trans as $key => $tran) {
+                    if (!isset($translationsArr[$key])) {
                         $gtTran = $gt->translateText($tran, $fromLanguage = 'en', $toLanguage = 'ru');
 
-                        if(!$gt->getErrors()) {
+                        if (!$gt->getErrors()) {
                             $tran = $gtTran;
                         } else {
                             echo 'Translator error. '.$gt->getErrors();
@@ -86,16 +82,14 @@ class TranslationGenerator {
                         $translationsArr[$key] = $tran;
                     }
                 }
-
             } else {
-
                 $translationsArr = \Symfony\Component\Yaml\Yaml::parse($file);
                 $translationsArr = $translationsArr ? $translationsArr : [];
                 $translationsArr  = array_merge($trans, $translationsArr);
             }
 
             ksort($translationsArr);
-            if($translationsArr) {
+            if ($translationsArr) {
                 $translationsYml = \Symfony\Component\Yaml\Yaml::dump($translationsArr);
             } else {
                 $translationsYml = '';

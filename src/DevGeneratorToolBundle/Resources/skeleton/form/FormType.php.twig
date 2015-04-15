@@ -1,10 +1,11 @@
 <?php
 
-namespace {{ backend_bundle_ns }}\Form\Type;
+namespace App\CoreBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
 //use Symfony\Component\Form;
 
 abstract class {{ form_class }} extends AbstractType
@@ -15,26 +16,24 @@ abstract class {{ form_class }} extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        ///** @var \{{ core_bundle_ns }}\Entity\{{ entity }} $entity */
-        //$entity = $builder->getData();
+        /* @var \{{ core_bundle_ns }}\Entity\{{ entity }} $entity */
+        // $entity = $builder->getData();
 
         $builder{{ "\n" }}{%- for field in fields %}
-            ->add('{{ field.fieldName }}', {{ (field.formType is defined and field.formType!='objectChoice') ? "'"~field.formType~"'": 'null' }}, [
-                    /* {{ field.type }} */
-                {% if field.formType is defined and (field.formType=='choice' or field.formType=='objectChoice') %}
-    'label'       => '{{ field.label }}',
-                    'empty_value' => '',
-                {% else %}
-    'label' => '{{ field.label }}',
-                {% endif -%}
-            ]){{ "\n" }}
+{% set fieldName = field.fieldName %}
+{% set fieldType = (field.formType is defined and field.formType!='objectChoice') ? "'"~field.formType~"'": 'null' %}
+{% set fieldComent = '/*' ~ field.type ~ '*/' %}
+{% set format = "->add(%s %s %s)\n" %}
+            {{ format|format("'"~fieldName~"',", fieldType, fieldComent)}}
         {%- endfor %}
         ;
 
-        //$builder->addEventListener(Form\FormEvents::SUBMIT,
-        //    function (Form\FormEvent $event)  {
-        //    }
-        //);
+        /*
+        $builder->addEventListener(Form\FormEvents::SUBMIT,
+            function (Form\FormEvent $event)  {
+            }
+        );
+        */
     }
 
     /**
@@ -45,7 +44,8 @@ abstract class {{ form_class }} extends AbstractType
         $resolver->setDefaults([
             'data_class'         => '{{ core_bundle_ns }}\Entity\{{ entity }}',
             'label'              => '{{ form_label }}',
-            'translation_domain' => '{{ entity }}']);
+            'translation_domain' => '{{ entity }}',
+        ]);
     }
 
     /**

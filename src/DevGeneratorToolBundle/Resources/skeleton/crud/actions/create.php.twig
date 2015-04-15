@@ -1,7 +1,9 @@
 
     /**
      * Creates a new Entity\{{ entity }} entity.
+     *
      * @param HttpFoundation\Request $request
+     *
      * @return HttpFoundation\RedirectResponse|HttpFoundation\Response
      */
     public function createAction(HttpFoundation\Request $request)
@@ -13,17 +15,22 @@
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-
             $em = $this->getEntityManager();
+
             $em->persist($entity);
             $em->flush();
 
             {% if 'show' in actions -%}
-                $url = $this->generateUrl('{{ route_prefix }}.show', ['id' => $entity->getId()]);
+
+            $url = $this->generateUrl('{{ route_prefix }}.show', ['id' => $entity->getId()]);
+
             return $this->redirect($url);
+
             {%- else %}
+
                 return $this->redirect();
-            {% endif %}
+
+            {%- endif %}
 
         }
 
@@ -34,6 +41,6 @@
             '{{ backend_bundle }}:{{ entity }}:Crud/create.html.twig', [
                 'entity'       => $entity,
                 'form'         => $form->createView(),
-                'context_menu' => $this->createContextMenu()
+                'context_menu' => $this->createContextMenu(),
         ]);
     }

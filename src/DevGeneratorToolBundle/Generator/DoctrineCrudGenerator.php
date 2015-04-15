@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 
 /**
  * Generates a CRUD controller.
- *
  */
 class DoctrineCrudGenerator extends Generator
 {
@@ -48,7 +47,8 @@ class DoctrineCrudGenerator extends Generator
     /**
      * @param string $src
      */
-    public function setSrc($src) {
+    public function setSrc($src)
+    {
         $this->src = $src;
     }
 
@@ -87,7 +87,7 @@ class DoctrineCrudGenerator extends Generator
      *
      * @throws \RuntimeException
      */
-    public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata,  $routePrefix, $needWriteActions)
+    public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata, $routePrefix, $needWriteActions)
     {
         $this->bundle   = $bundle;
         $this->metadata = $metadata;
@@ -107,11 +107,11 @@ class DoctrineCrudGenerator extends Generator
             throw new \RuntimeException('The CRUD generator expects the entity object has a primary key field named "id" with a getId() method.');
         }
 
-        if(is_null($this->src)) {
+        if (is_null($this->src)) {
             $this->src = $this->bundle->getPath();
         }
 
-        if(is_null($this->outputBundle)) {
+        if (is_null($this->outputBundle)) {
             $this->outputBundle = $this->bundle->getName();
         }
 
@@ -137,7 +137,7 @@ class DoctrineCrudGenerator extends Generator
             $this->generateEditView($dirViews);
         }
 
-        if($this->getContainer()->getParameter('dev_generator_tool.generate_translation')) {
+        if ($this->getContainer()->getParameter('dev_generator_tool.generate_translation')) {
             $fieldMappings = $this->getFieldMappings();
             $g = new TranslationGenerator($this->filesystem, sprintf('%s/Resources/translations', $this->src), $entity, $fieldMappings);
             $g->generate();
@@ -151,7 +151,7 @@ class DoctrineCrudGenerator extends Generator
      */
     public function initTplOptions($routePrefixBase)
     {
-        $routePrefix     = $routePrefixBase . '.' . $this->entityName;
+        $routePrefix     = $routePrefixBase.'.'.$this->entityName;
 
         $fieldMappings = $this->getFieldMappings();
         $maxColumnNameSize = 0;
@@ -181,8 +181,8 @@ class DoctrineCrudGenerator extends Generator
             'web_bundle_ns'        => $this->getContainer()->getParameter('dev_generator_tool.bundle.web.ns'),
             'web_bundle'           => $this->getContainer()->getParameter('dev_generator_tool.bundle.web.name'),
 
-            'backend_bundle_ns'    => $baseNs . '\\' . $this->outputBundle,
-            'backend_bundle'       => $baseNs . $this->outputBundle,
+            'backend_bundle_ns'    => $baseNs.'\\'.$this->outputBundle,
+            'backend_bundle'       => $baseNs.$this->outputBundle,
         ];
     }
 
@@ -202,7 +202,6 @@ class DoctrineCrudGenerator extends Generator
 
     /**
      * Generates the routing configuration.
-     *
      */
     protected function generateConfiguration()
     {
@@ -242,7 +241,6 @@ class DoctrineCrudGenerator extends Generator
      */
     protected function generateNewView($dir)
     {
-
         $this->renderFile($this->skeletonDir, 'views/create.html.twig.twig', $dir.'/Crud/create.html.twig', $this->tplOptions);
     }
 
@@ -256,8 +254,6 @@ class DoctrineCrudGenerator extends Generator
         $this->renderFile($this->skeletonDir, 'views/edit.html.twig.twig', $dir.'/Crud/edit.html.twig', $this->tplOptions);
     }
 
-
-
     /**
      * Returns an array of record actions to generate (edit, show).
      *
@@ -265,7 +261,7 @@ class DoctrineCrudGenerator extends Generator
      */
     protected function getRecordActions()
     {
-        return array_filter($this->actions, function($item) {
+        return array_filter($this->actions, function ($item) {
             return in_array($item, ['show', 'edit']);
         });
     }
@@ -274,16 +270,16 @@ class DoctrineCrudGenerator extends Generator
     {
         $fieldMappings = $this->metadata->fieldMappings;
 
-        foreach($fieldMappings as &$fieldMapping) {
+        foreach ($fieldMappings as &$fieldMapping) {
             $fieldMapping['label'] = ucfirst(preg_replace('/_/', ' ', $fieldMapping['columnName']));
-            $fieldMapping['columnNameSize'] = strlen($fieldMapping['columnName'])+1;
+            $fieldMapping['columnNameSize'] = strlen($fieldMapping['columnName']) + 1;
         }
 
         ksort($fieldMappings);
-        if(isset($fieldMappings['id'])) {
+        if (isset($fieldMappings['id'])) {
             $idField = $fieldMappings['id'];
             unset($fieldMappings['id']);
-            $fieldMappings = array_merge(['id'=>$idField], $fieldMappings);
+            $fieldMappings = array_merge(['id' => $idField], $fieldMappings);
         }
 
         return $fieldMappings;

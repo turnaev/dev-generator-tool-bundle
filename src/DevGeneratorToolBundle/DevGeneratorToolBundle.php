@@ -1,6 +1,5 @@
 <?php
 
-
 namespace DevGeneratorToolBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;

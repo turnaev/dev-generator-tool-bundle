@@ -1,6 +1,5 @@
 <?php
 
-
 namespace DevGeneratorToolBundle\Command;
 
 use Symfony\Component\Console\Input\InputOption;
@@ -11,11 +10,9 @@ use Symfony\Component\Console\Command\Command;
 use DevGeneratorToolBundle\Generator\DoctrineCrudGenerator;
 use DevGeneratorToolBundle\Generator\DoctrineFormGenerator;
 use DevGeneratorToolBundle\Command\Helper\DialogHelper;
-use DevGeneratorToolBundle\Manipulator\RoutingManipulator;
 
 /**
  * Generates a CRUD for a Doctrine entity.
- *
  */
 class GenerateDoctrineCrudCommand extends GenerateDoctrineCommand
 {
@@ -65,14 +62,13 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if($input->getOption('src')) {
+        if ($input->getOption('src')) {
             $this->src = $input->getOption('src');
         }
 
-        if($input->getOption('output-bundle')) {
+        if ($input->getOption('output-bundle')) {
             $this->outputBundle = $input->getOption('output-bundle');
         }
-
 
         $dialog = $this->getDialogHelper();
 
@@ -171,8 +167,8 @@ EOT
             '',
             $this->getHelper('formatter')->formatBlock('Summary before generation', 'bg=blue;fg=white', true),
             '',
-            sprintf("You are going to generate a CRUD controller for \"<info>%s:%s</info>\"", $bundle, $entity),
-            sprintf("using the \"<info>%s</info>\" format.", $format),
+            sprintf('You are going to generate a CRUD controller for "<info>%s:%s</info>"', $bundle, $entity),
+            sprintf('using the "<info>%s</info>" format.', $format),
             '',
         ));
     }
@@ -187,7 +183,7 @@ EOT
             $generator->setSrc($this->src);
             $generator->setTplOptions($tplOptions);
             $generator->generate($bundle, $entity, $metadata[0]);
-        } catch (\RuntimeException $e ) {
+        } catch (\RuntimeException $e) {
             // form already exists
         }
     }
@@ -204,7 +200,6 @@ EOT
 
         return $prefix;
     }
-
 
     protected function getRoutePrefix(InputInterface $input, $entity)
     {
@@ -224,7 +219,6 @@ EOT
             $dirSkeleton = $container->getParameter('dev_generator_tool.dir_skeleton');
             $this->generator = new DoctrineCrudGenerator($container->get('filesystem'), $dirSkeleton.'/crud');
             $this->generator->setContainer($this->getContainer());
-
         }
 
         return $this->generator;
@@ -241,7 +235,7 @@ EOT
         if (null === $this->formGenerator) {
             $container = $this->getContainer();
             $dirSkeleton = $container->getParameter('dev_generator_tool.dir_skeleton');
-            $this->formGenerator = new DoctrineFormGenerator($container->get('filesystem'),  $dirSkeleton.'/form');
+            $this->formGenerator = new DoctrineFormGenerator($container->get('filesystem'), $dirSkeleton.'/form');
         }
 
         return $this->formGenerator;

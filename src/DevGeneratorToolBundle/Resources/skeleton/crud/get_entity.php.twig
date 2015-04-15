@@ -1,10 +1,12 @@
 
     /**
-     * @param integer $id
+     * @param int $id
+     *
      * @return Entity\{{ entity }}
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    private function getEntity($id)
+    protected function getEntity($id)
     {
         $entity = $this->getRepository('{{ core_bundle }}:{{ entity }}')->find($id);
 

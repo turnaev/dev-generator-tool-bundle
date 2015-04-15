@@ -1,6 +1,5 @@
 <?php
 
-
 namespace DevGeneratorToolBundle\Command;
 
 use Doctrine\Bundle\DoctrineBundle\Mapping\DisconnectedMetadataFactory as MetadataFactory;

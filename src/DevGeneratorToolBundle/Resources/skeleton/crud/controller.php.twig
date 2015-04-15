@@ -5,8 +5,7 @@ namespace {{ backend_bundle_ns }}\Controller;
 {% if 'new' in actions or 'edit' in actions or 'delete' in actions %}
 use Symfony\Component\HttpFoundation;
 {%   endif %}
-
-use {{ web_bundle_ns }}\Controller\BaseController;
+use App\WebBundle\Controller\BaseController;
 use {{ core_bundle_ns }}\Entity;
 
 class {{ entity }}Controller extends BaseController

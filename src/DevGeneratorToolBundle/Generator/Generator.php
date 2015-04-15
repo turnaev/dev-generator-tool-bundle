@@ -1,11 +1,9 @@
 <?php
 
-
 namespace DevGeneratorToolBundle\Generator;
 
 /**
  * Generator is the base class for all generators.
- *
  */
 class Generator
 {
