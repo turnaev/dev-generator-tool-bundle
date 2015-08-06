@@ -8,11 +8,5 @@
      */
     protected function getEntity($id)
     {
-        $entity = $this->getRepository('{{ core_bundle }}:{{ entity }}')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
-        }
-
-        return $entity;
+        return $this->findEntity('{{ core_bundle }}:{{ entity }}', $id);
     }

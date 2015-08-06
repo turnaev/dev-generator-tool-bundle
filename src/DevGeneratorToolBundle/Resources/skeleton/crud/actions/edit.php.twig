@@ -12,11 +12,12 @@
         $entity = $this->getEntity($id);
 
         $formType = $this->get('form.type.entity.{{ entity_name }}');
-        $editForm = $this->createForm($formType, $entity, ['method' => 'PUT']);
-        $editForm->handleRequest($request);
+        $form = $this->createForm($formType, $entity, ['method' => 'PUT']);
+        $form->handleRequest($request);
 
-        if ($editForm->isValid()) {
+        if ($form->isValid()) {
             $em = $this->getEntityManager();
+
             $em->persist($entity);
             $em->flush();
 
@@ -36,7 +37,7 @@
         return $this->render(
             '{{ backend_bundle }}:{{ entity }}:Crud/edit.html.twig', [
                 'entity'       => $entity,
-                'form'         => $editForm->createView(),
+                'form'         => $form->createView(),
 {% if 'delete' in actions %}
                 'delete_form'  => $this->createDeleteForm($id)->createView(),
 {% endif %}

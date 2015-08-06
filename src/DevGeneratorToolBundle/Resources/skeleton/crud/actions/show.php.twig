@@ -11,7 +11,7 @@
         $entity = $this->getEntity($id);
 
         $url = $this->generateUrl('{{ route_prefix }}.show', ['id' => $entity->getId()]);
-        $this->initBreadcrumb()->addItem('Detail', $url);
+        $this->initBreadcrumb()->addItem('Show', $url);
 
         return $this->render(
             '{{ backend_bundle }}:{{ entity }}:Crud/show.html.twig', [

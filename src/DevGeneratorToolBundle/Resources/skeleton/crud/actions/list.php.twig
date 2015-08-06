@@ -26,7 +26,7 @@
             ->setRouteUrl($this->generateUrl('{{ route_prefix }}.list'))
             ->setSource($queryBuilder, $columns, ['translation_domain' => '{{ entity }}'])
             ->setRowActions([
-                [null, '{{ route_prefix }}.show', false, '_self', ['icon' => 'fa fa-eye',  'title' => 'Detail']],
+                [null, '{{ route_prefix }}.show', false, '_self', ['icon' => 'fa fa-eye',  'title' => 'Show']],
                 [null, '{{ route_prefix }}.edit', false, '_self', ['icon' => 'fa fa-edit', 'title' => 'Edit']],
             ]);
 

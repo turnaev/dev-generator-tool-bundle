@@ -2,38 +2,29 @@
 
 namespace App\CoreBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form;
+use {{ core_bundle_ns}}\Entity;
 
-//use Symfony\Component\Form;
-
-abstract class {{ form_class }} extends AbstractType
+abstract class {{ form_class }} extends Form\AbstractType
 {
     /**
-     * @param FormBuilderInterface $builder
+     * @param Form\FormBuilderInterface $builder
      * @param array                $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(Form\FormBuilderInterface $builder, array $options)
     {
-        /* @var \{{ core_bundle_ns }}\Entity\{{ entity }} $entity */
+        /* @var Entity\{{ entity }} $entity */
         // $entity = $builder->getData();
 
         $builder{{ "\n" }}{%- for field in fields %}
 {% set fieldName = field.fieldName %}
 {% set fieldType = (field.formType is defined and field.formType!='objectChoice') ? "'"~field.formType~"'": 'null' %}
-{% set fieldComent = '/*' ~ field.type ~ '*/' %}
+{% set fieldComent = '/* ' ~ field.type|replace({'App\\CoreBundle\\':'@var '}) ~ ' */' %}
 {% set format = "->add(%s %s %s)\n" %}
             {{ format|format("'"~fieldName~"',", fieldType, fieldComent)}}
         {%- endfor %}
         ;
-
-        /*
-        $builder->addEventListener(Form\FormEvents::SUBMIT,
-            function (Form\FormEvent $event)  {
-            }
-        );
-        */
     }
 
     /**
