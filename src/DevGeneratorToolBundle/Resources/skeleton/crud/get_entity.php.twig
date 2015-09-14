@@ -3,10 +3,8 @@
      * @param int $id
      *
      * @return Entity\{{ entity }}
-     *
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     protected function getEntity($id)
     {
-        return $this->findEntity('{{ core_bundle }}:{{ entity }}', $id);
+        return $this->findEntity('{{ entity_bundle }}:{{ entity }}', $id);
     }

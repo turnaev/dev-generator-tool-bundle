@@ -41,6 +41,22 @@ class DoctrineFormGenerator extends Generator
     }
 
     /**
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+     */
+    public function setContainer(\Symfony\Component\DependencyInjection\ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * @return \Symfony\Component\DependencyInjection\ContainerInterface $container
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
      * Generates the entity form class if it does not exist.
      *
      * @param BundleInterface   $bundle   The bundle in which to create the class
@@ -79,8 +95,11 @@ class DoctrineFormGenerator extends Generator
         $this->generateForm();
         $this->generateServices();
 
-        $g = new TranslationGenerator($this->filesystem, sprintf('%s/Resources/translations', $this->src), $entity, $fields);
-        $g->generate();
+        if ($this->getContainer()->getParameter('dev_generator_tool.generate_translation')) {
+            $g = new TranslationGenerator($this->filesystem, sprintf('%s/Resources/translations', $this->src), $entity, $fields);
+            $g->generate();
+        }
+
     }
 
     /**
@@ -158,6 +177,26 @@ class DoctrineFormGenerator extends Generator
                     'formType'       => 'objectChoice',
                 ];
             }
+        }
+
+        foreach($fields as &$field) {
+
+            $entityBundle = '\\'.$this->tplOptions['entity_bundle_ns'];
+            $type = $field['type'];
+            if(strpos($type, 'Entity', 0)) {
+                $type = '\\'.$type;
+            }
+
+            if(strpos($type, $entityBundle, 0) === 0) {
+                $type = str_replace($entityBundle.'\\', '', $type);
+                $type = '@var '. $type;
+            }
+
+
+
+            $field['formTypeHint'] = "/* {$type} */";
+
+
         }
 
         return $fields;

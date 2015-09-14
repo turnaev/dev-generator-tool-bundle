@@ -22,9 +22,6 @@ class DevGeneratorToolExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.xml');
-
         //generate_translation
         $container->setParameter('dev_generator_tool.generate_translation', $config['generate_translation']);
 

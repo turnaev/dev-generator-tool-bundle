@@ -17,7 +17,7 @@
     {% endfor %}
     ];
 
-        $queryBuilder = $this->getRepository('{{ core_bundle }}:{{ entity }}')
+        $queryBuilder = $this->getRepository('{{ entity_bundle }}:{{ entity }}')
             ->createQueryBuilder('i')
         ;
 
@@ -39,7 +39,7 @@
         }
 
         return $gridBuilder->getGridResponse(
-            '{{ backend_bundle }}:{{  entity }}:Crud/list.html.twig',
+            '{{ backend_bundle }}:{{ entity }}:Crud/list.html.twig',
             $viewData
         );
     }

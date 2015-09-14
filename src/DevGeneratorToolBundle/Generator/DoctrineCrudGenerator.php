@@ -16,6 +16,7 @@ class DoctrineCrudGenerator extends Generator
 
     protected $tplOptions = [];
     protected $bundle;
+    protected $entityBundle;
     protected $entity;
     protected $entityName;
     protected $metadata;
@@ -23,6 +24,14 @@ class DoctrineCrudGenerator extends Generator
     protected $container;
     protected $src;
     protected $outputBundle;
+
+    /**
+     * @param mixed $entityBundle
+     */
+    public function setEntityBundle($entityBundle)
+    {
+        $this->entityBundle = $entityBundle;
+    }
 
     /**
      * Constructor.
@@ -79,7 +88,7 @@ class DoctrineCrudGenerator extends Generator
     /**
      * Generate the CRUD controller.
      *
-     * @param BundleInterface   $bundle           A bundle object
+     * @param BundleInterface   $entityBundle           A bundle object
      * @param string            $entity           The entity relative class name
      * @param ClassMetadataInfo $metadata         The entity class metadata
      * @param string            $routePrefix      The route name prefix
@@ -87,9 +96,10 @@ class DoctrineCrudGenerator extends Generator
      *
      * @throws \RuntimeException
      */
-    public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata, $routePrefix, $needWriteActions)
+    public function generate($bundle, $entity, ClassMetadataInfo $metadata, $routePrefix, $needWriteActions)
     {
         $this->bundle   = $bundle;
+
         $this->metadata = $metadata;
         $this->actions = $needWriteActions ? ['list', 'show', 'new', 'edit', 'delete'] : ['list', 'show'];
         $this->entity   = $entity;
@@ -137,7 +147,9 @@ class DoctrineCrudGenerator extends Generator
             $this->generateEditView($dirViews);
         }
 
+
         if ($this->getContainer()->getParameter('dev_generator_tool.generate_translation')) {
+
             $fieldMappings = $this->getFieldMappings();
             $g = new TranslationGenerator($this->filesystem, sprintf('%s/Resources/translations', $this->src), $entity, $fieldMappings);
             $g->generate();
@@ -161,6 +173,8 @@ class DoctrineCrudGenerator extends Generator
 
         $baseNs = $this->getContainer()->getParameter('dev_generator_tool.bundle.web.base_ns');
 
+        $entityBundleNs = preg_replace('/^Common/', 'Common\\', $this->entityBundle);
+
         $this->tplOptions = [
             'fields'               => $fieldMappings,
 
@@ -172,6 +186,8 @@ class DoctrineCrudGenerator extends Generator
             'route_prefix_base'    => $routePrefixBase,
             'route_prefix'         => $routePrefix,
 
+            'entity_bundle'        => $this->entityBundle,
+            'entity_bundle_ns'     => $entityBundleNs,
             'entity'               => $this->entity,
             'entity_name'          => $this->entityName,
 

@@ -2,9 +2,9 @@
 
 namespace App\CoreBundle\Form\Type;
 
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form;
-use {{ core_bundle_ns}}\Entity;
+use {{ entity_bundle_ns}}\Entity;
 
 abstract class {{ form_class }} extends Form\AbstractType
 {
@@ -20,7 +20,7 @@ abstract class {{ form_class }} extends Form\AbstractType
         $builder{{ "\n" }}{%- for field in fields %}
 {% set fieldName = field.fieldName %}
 {% set fieldType = (field.formType is defined and field.formType!='objectChoice') ? "'"~field.formType~"'": 'null' %}
-{% set fieldComent = '/* ' ~ field.type|replace({'App\\CoreBundle\\':'@var '}) ~ ' */' %}
+{% set fieldComent = field.formTypeHint %}
 {% set format = "->add(%s %s %s)\n" %}
             {{ format|format("'"~fieldName~"',", fieldType, fieldComent)}}
         {%- endfor %}
@@ -28,12 +28,12 @@ abstract class {{ form_class }} extends Form\AbstractType
     }
 
     /**
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class'         => '{{ core_bundle_ns }}\Entity\{{ entity }}',
+            'data_class'         => '{{ entity_bundle_ns }}\Entity\{{ entity }}',
             'label'              => '{{ form_label }}',
             'translation_domain' => '{{ entity }}',
         ]);

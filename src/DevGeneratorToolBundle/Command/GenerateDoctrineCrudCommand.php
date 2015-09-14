@@ -82,6 +82,7 @@ EOT
 
         $entity = Validators::validateEntityName($input->getOption('entity'));
         list($bundle, $entity) = $this->parseShortcutNotation($entity);
+        $entityBundle = $bundle;
 
         $prefix = $this->getRoutePrefix($input, $entity);
         $withWrite = $input->getOption('with-write');
@@ -94,6 +95,7 @@ EOT
         $bundle      = $this->getContainer()->get('kernel')->getBundle($bundle);
 
         $generator = $this->getGenerator();
+        $generator->setEntityBundle($entityBundle);
         $generator->setSrc($this->src);
         $generator->setOutputBundle($this->outputBundle);
 
@@ -236,6 +238,7 @@ EOT
             $container = $this->getContainer();
             $dirSkeleton = $container->getParameter('dev_generator_tool.dir_skeleton');
             $this->formGenerator = new DoctrineFormGenerator($container->get('filesystem'), $dirSkeleton.'/form');
+            $this->formGenerator->setContainer($container);
         }
 
         return $this->formGenerator;

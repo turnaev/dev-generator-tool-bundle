@@ -50,7 +50,7 @@ class TranslationGenerator
             $trans[$fieldMapping['fieldName']] = $fieldMapping['label'];
         }
 
-        $gt = new \DevConsoleToolBundle\Translater\GoogleTranslater();
+        $gt = new \DevGeneratorToolBundle\Translater\GoogleTranslater();
 
         foreach (['ru', 'en'] as $locale) {
             $file = sprintf('%s/%s.%s.yml', $this->dir, $this->entity, $locale);
