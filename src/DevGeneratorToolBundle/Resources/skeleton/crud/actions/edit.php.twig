@@ -12,7 +12,7 @@
         $entity = $this->getEntity($id);
 
         $formType = $this->get('form.type.entity.{{ entity_name }}');
-        $form = $this->createForm($formType, $entity, ['method' => 'PUT']);
+        $form = $this->createForm($formType, $entity);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
