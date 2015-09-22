@@ -173,7 +173,15 @@ class DoctrineCrudGenerator extends Generator
 
         $baseNs = $this->getContainer()->getParameter('dev_generator_tool.bundle.web.base_ns');
 
-        $entityBundleNs = preg_replace('/^Common/', 'Common\\', $this->entityBundle);
+        $entityBundleNs = $this->entityBundle;
+
+        $entityBundleNs = preg_replace(
+            ['/^Common/', '/^App/'],
+            ['Common\\',  'App\\'],
+            $entityBundleNs);
+
+        $backendBundleNs = preg_replace('/\//', '\\', $this->outputBundle);
+        $backendBundle = preg_replace('/\\\/', '', $backendBundleNs);
 
         $this->tplOptions = [
             'fields'               => $fieldMappings,
@@ -197,8 +205,8 @@ class DoctrineCrudGenerator extends Generator
             'web_bundle_ns'        => $this->getContainer()->getParameter('dev_generator_tool.bundle.web.ns'),
             'web_bundle'           => $this->getContainer()->getParameter('dev_generator_tool.bundle.web.name'),
 
-            'backend_bundle_ns'    => $baseNs.'\\'.$this->outputBundle,
-            'backend_bundle'       => $baseNs.$this->outputBundle,
+            'backend_bundle_ns'    => $backendBundleNs,
+            'backend_bundle'       => $backendBundle,
         ];
     }
 
