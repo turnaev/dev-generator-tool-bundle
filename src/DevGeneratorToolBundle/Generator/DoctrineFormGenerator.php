@@ -79,6 +79,7 @@ class DoctrineFormGenerator extends Generator
 
         $fields           = $this->getFieldsFromMetadata($metadata);
         $maxColumnNameSize = 0;
+
         foreach ($fields as $field) {
             $maxColumnNameSize = max($field['columnNameSize'] + 2, $maxColumnNameSize);
         }
@@ -129,7 +130,7 @@ class DoctrineFormGenerator extends Generator
         $key = "entity.form.{$this->tplOptions['entity_name']}.type";
         if (!strpos($services, $key)) {
             $service = $this->render($this->skeletonDir.'/..', 'config/service.xml.twig', $this->tplOptions);
-            $services = str_replace('</services>', $service.'</services>', $services);
+            $services = str_replace('    </services>', $service."\n\n    </services>", $services);
             file_put_contents($target, $services);
         }
     }
@@ -192,10 +193,7 @@ class DoctrineFormGenerator extends Generator
                 $type = '@var '. $type;
             }
 
-
-
             $field['formTypeHint'] = "/* {$type} */";
-
 
         }
 

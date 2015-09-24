@@ -236,6 +236,25 @@ class DoctrineCrudGenerator extends Generator
         );
 
         $this->renderFile($this->skeletonDir.'/..', 'config/routing.xml.twig', $target, $this->tplOptions);
+
+        $target = sprintf(
+            '%s/Resources/config/routing.xml',
+            $this->src
+        );
+
+        if (!file_exists($target)) {
+            $this->renderFile($this->skeletonDir.'/..', 'config/routings.xml.twig', $target, $this->tplOptions);
+        }
+
+        $routings = file_get_contents($target);
+
+        $key = "/{$this->tplOptions['entity_name']}.xml";
+        if (!strpos($routings, $key)) {
+
+            $routing = $this->render($this->skeletonDir.'/..', 'config/routing_item.xml.twig', $this->tplOptions);
+            $routings = str_replace("\n</routes>", $routing . "\n\n</routes>", $routings);
+            file_put_contents($target, $routings);
+        }
     }
 
     /**

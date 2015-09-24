@@ -5,34 +5,34 @@
     xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
     <route id="{{ route_prefix }}" path="/">
-        <default key="_controller">{{ entity_bundle }}:{{ entity }}:list</default>
+        <default key="_controller">{{ backend_bundle }}:{{ entity }}:list</default>
     </route>
 
     <route id="{{ route_prefix }}.list" path="/list">
-        <default key="_controller">{{ entity_bundle }}:{{ entity }}:list</default>
+        <default key="_controller">{{ backend_bundle }}:{{ entity }}:list</default>
     </route>
 {%if 'new' in actions %}
 
     <route id="{{ route_prefix }}.create" path="/create">
-        <default key="_controller">{{ entity_bundle }}:{{ entity }}:create</default>
+        <default key="_controller">{{ backend_bundle }}:{{ entity }}:create</default>
     </route>
 {% endif %}
 
     <route id="{{ route_prefix }}.show" path="/{id}/show">
-        <default key="_controller">{{ entity_bundle }}:{{ entity }}:show</default>
+        <default key="_controller">{{ backend_bundle }}:{{ entity }}:show</default>
         <requirement key="id">\d+</requirement>
     </route>
 {%if 'edit' in actions %}
 
     <route id="{{ route_prefix }}.edit" path="/{id}/edit">
-        <default key="_controller">{{ entity_bundle }}:{{ entity }}:edit</default>
+        <default key="_controller">{{ backend_bundle }}:{{ entity }}:edit</default>
         <requirement key="id">\d+</requirement>
     </route>
 {% endif %}
 {% if 'delete' in actions %}
 
     <route id="{{ route_prefix }}.delete" path="/{id}/delete">
-        <default key="_controller">{{ entity_bundle }}:{{ entity }}:delete</default>
+        <default key="_controller">{{ backend_bundle }}:{{ entity }}:delete</default>
         <requirement key="methods">post|delete</requirement>
         <requirement key="id">\d+</requirement>
     </route>
