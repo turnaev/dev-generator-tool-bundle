@@ -17,7 +17,7 @@
             '{{ backend_bundle }}:{{ entity }}:Crud/show.html.twig', [
                 'entity'       => $entity,
 {% if 'delete' in actions %}
-                'delete_form'  => $this->createDeleteForm($id)->createView(),
+                'delete_form'  => $this->createDeleteForm($entity)->createView(),
 {% endif %}
                 'context_menu' => $this->createContextMenu($entity),
         ]);

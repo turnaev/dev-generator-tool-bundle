@@ -6,12 +6,16 @@
      * @param int                    $id
      *
      * @return HttpFoundation\RedirectResponse
-     */
+    */
     public function deleteAction(HttpFoundation\Request $request, $id)
     {
-        $this->deleteEntity($request, $id);
+        $entity = $this->getEntity($id);
 
-        $url = $this->generateUrl('{{ route_prefix }}.list');
+        if($this->deleteEntity($entity)) {
+            $url = $this->generateUrl('{{ route_prefix }}.list');
+        } else {
+            $url = $request->headers->get('referer');
+        }
 
         return $this->redirect($url);
     }

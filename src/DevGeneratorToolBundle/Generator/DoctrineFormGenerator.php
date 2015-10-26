@@ -135,6 +135,18 @@ class DoctrineFormGenerator extends Generator
         }
     }
 
+    private $ignoreFeilds = [
+        'realmId',
+        'guid',
+        'version',
+        'createdAt',
+        'createdByUser',
+        'createdByPartyId',
+        'changedAt',
+        'changedByUser',
+        'changedByPartyId'
+    ];
+
     /**
      * Returns an array of fields. Fields can be both column fields and
      * association fields.
@@ -146,6 +158,15 @@ class DoctrineFormGenerator extends Generator
     private function getFieldsFromMetadata(ClassMetadataInfo $metadata)
     {
         $fields = $this->tplOptions['fields'];
+
+
+
+        foreach($fields as $field=>$null) {
+            if(in_array($field, $this->ignoreFeilds)) {
+                unset($fields[$field]);
+            }
+        }
+
         foreach ($fields as &$field) {
             if (in_array($field['type'], ['date', 'datetime', 'dateinterval', 'string_array', 'integer_array'])) {
                 $field['formType'] = $field['type'];
@@ -163,7 +184,7 @@ class DoctrineFormGenerator extends Generator
                 $label = preg_replace('/([A-Z])/', ' \1', $fieldName);
 
                 $label = trim($label);
-                $label =  strtolower($label);
+                $label = strtolower($label);
                 $label = ucfirst($label);
 
                 $fields[$fieldName] = [

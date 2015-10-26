@@ -39,7 +39,7 @@
                 'entity'       => $entity,
                 'form'         => $form->createView(),
 {% if 'delete' in actions %}
-                'delete_form'  => $this->createDeleteForm($id)->createView(),
+                'delete_form'  => $this->createDeleteForm($entity)->createView(),
 {% endif %}
                 'context_menu' => $this->createContextMenu($entity),
         ]);
