@@ -136,15 +136,15 @@ class DoctrineFormGenerator extends Generator
     }
 
     private $ignoreFeilds = [
-        'realmId',
+        'realmCode',
         'guid',
         'version',
         'createdAt',
         'createdByUser',
-        'createdByPartyId',
+        'createdByPartyCode',
         'changedAt',
         'changedByUser',
-        'changedByPartyId'
+        'changedByPartyCode'
     ];
 
     /**

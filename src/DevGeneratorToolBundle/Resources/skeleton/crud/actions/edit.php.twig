@@ -1,4 +1,3 @@
-
     /**
      * Displays a form to edit an existing {{ entity }} entity.
      *
@@ -12,14 +11,13 @@
         $entity = $this->getEntity($id);
 
         $formType = $this->get('form.type.entity.{{ entity_name }}');
-        $form = $this->createForm($formType, $entity);
-        $form->handleRequest($request);
+        $form = $this->createForm($formType, $entity, ['method' => 'PUT',]);
 
-        if ($form->isValid()) {
+        if ($form->handleRequest($request)->isValid()) {
             $em = $this->getEntityManager();
 
             $em->persist($entity);
-            $em->flush();
+            $em->flush($entity);
 
             {% if 'show' in actions -%}
                 $url = $this->generateUrl('{{ route_prefix }}.show', ['id' => $entity->getId()]);
@@ -34,13 +32,12 @@
         $url = $this->generateUrl('{{ route_prefix }}.edit', ['id' => $entity->getId()]);
         $this->initBreadcrumb()->addItem('Edit', $url);
 
-        return $this->render(
-            '{{ backend_bundle }}:{{ entity }}:Crud/edit.html.twig', [
-                'entity'       => $entity,
-                'form'         => $form->createView(),
+        return [
+            'entity'       => $entity,
+            'form'         => $form->createView(),
 {% if 'delete' in actions %}
-                'delete_form'  => $this->createDeleteForm($entity)->createView(),
+            'delete_form'  => $this->createDeleteForm($entity)->createView(),
 {% endif %}
-                'context_menu' => $this->createContextMenu($entity),
-        ]);
+            'context_menu' => $this->createContextMenu($entity),
+        ];
     }

@@ -1,4 +1,3 @@
-
     /**
      * Finds and displays a {{ entity }} entity.
      *
@@ -13,12 +12,11 @@
         $url = $this->generateUrl('{{ route_prefix }}.show', ['id' => $entity->getId()]);
         $this->initBreadcrumb()->addItem('Show', $url);
 
-        return $this->render(
-            '{{ backend_bundle }}:{{ entity }}:Crud/show.html.twig', [
-                'entity'       => $entity,
+        return [
+            'entity'       => $entity,
 {% if 'delete' in actions %}
-                'delete_form'  => $this->createDeleteForm($entity)->createView(),
+            'delete_form'  => $this->createDeleteForm($entity)->createView(),
 {% endif %}
-                'context_menu' => $this->createContextMenu($entity),
-        ]);
+            'context_menu' => $this->createContextMenu($entity),
+        ];
     }

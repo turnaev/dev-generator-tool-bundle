@@ -1,4 +1,3 @@
-
     /**
      * List all {{ entity }} entities.
      *
@@ -38,8 +37,8 @@
             ];
         }
 
-        return $gridBuilder->getGridResponse(
-            '{{ backend_bundle }}:{{ entity }}:Crud/list.html.twig',
+        return [
+            $gridBuilder,
             $viewData
-        );
+        ];
     }

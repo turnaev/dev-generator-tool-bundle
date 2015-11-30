@@ -1,4 +1,3 @@
-
     /**
      * Creates a new Entity\{{ entity }} entity.
      *
@@ -11,14 +10,13 @@
         $entity  = new Entity\{{ entity }}();
 
         $formType = $this->get('form.type.entity.{{ entity_name }}');
-        $form = $this->createForm($formType, $entity, ['method' => 'PUT',]);
-        $form->handleRequest($request);
+        $form = $this->createForm($formType, $entity);
 
-        if ($form->isValid()) {
+        if ($form->handleRequest($request)->isValid()) {
             $em = $this->getEntityManager();
 
             $em->persist($entity);
-            $em->flush();
+            $em->flush($entity);
 
             {% if 'show' in actions -%}
 
@@ -37,10 +35,9 @@
         $url = $this->generateUrl('{{ route_prefix }}.create');
         $this->initBreadcrumb()->addItem('Create', $url);
 
-        return $this->render(
-            '{{ backend_bundle }}:{{ entity }}:Crud/create.html.twig', [
-                'entity'       => $entity,
-                'form'         => $form->createView(),
-                'context_menu' => $this->createContextMenu(),
-        ]);
+        return [
+            'entity'       => $entity,
+            'form'         => $form->createView(),
+            'context_menu' => $this->createContextMenu(),
+        ];
     }

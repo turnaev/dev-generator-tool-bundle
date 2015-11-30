@@ -10,29 +10,36 @@ use {{ entity_bundle_ns}}\Entity;
 
 class {{ entity }}Controller extends BaseController
 {
-    {%- if 'list' in actions %}
-        {%- include 'actions/list.php.twig' %}
-    {%- endif %}
+{% if 'list' in actions %}
+{% include 'actions/list.php.twig' %}
+{% endif %}
+{% if 'new' in actions %}
 
-    {%- if 'new' in actions %}
-        {%- include 'actions/create.php.twig' %}
-    {%- endif %}
 
-    {%- if 'show' in actions %}
-        {%- include 'actions/show.php.twig' %}
-    {%- endif %}
+{% include 'actions/create.php.twig' %}
+{% endif %}
+{% if 'show' in actions %}
 
-    {%- if 'edit' in actions %}
-        {%- include 'actions/edit.php.twig' %}
-    {%- endif %}
 
-    {%- if 'delete' in actions %}
-        {%- include 'actions/delete.php.twig' %}
-    {%- endif %}
+{% include 'actions/show.php.twig' %}
+{% endif %}
+{% if 'edit' in actions %}
 
-    {%- include 'get_entity.php.twig' %}
 
-    {%- include 'create_context_menu.php.twig' %}
+{% include 'actions/edit.php.twig' %}
+{% endif %}
+{% if 'delete' in actions %}
 
-    {%- include 'init_breadcrumb.php.twig' %}
+
+{% include 'actions/delete.php.twig' %}
+{% endif %}
+
+{% include 'get_entity.php.twig' %}
+
+
+{% include 'create_context_menu.php.twig' %}
+
+
+{% include 'init_breadcrumb.php.twig' %}
+
 }

@@ -4,16 +4,12 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
-    <route id="{{ route_prefix }}" methods="GET" path="/">
-        <default key="_controller">{{ backend_bundle }}:{{ entity }}:list</default>
-    </route>
-
     <route id="{{ route_prefix }}.list" methods="GET" path="/list">
         <default key="_controller">{{ backend_bundle }}:{{ entity }}:list</default>
     </route>
 {%if 'new' in actions %}
 
-    <route id="{{ route_prefix }}.create" methods="POST" path="/create">
+    <route id="{{ route_prefix }}.create" methods="GET|POST" path="/create">
         <default key="_controller">{{ backend_bundle }}:{{ entity }}:create</default>
     </route>
 {% endif %}
@@ -24,7 +20,7 @@
     </route>
 {%if 'edit' in actions %}
 
-    <route id="{{ route_prefix }}.edit" methods="POST" path="/{id}/edit">
+    <route id="{{ route_prefix }}.edit" methods="GET|PUT" path="/{id}/edit">
         <default key="_controller">{{ backend_bundle }}:{{ entity }}:edit</default>
         <requirement key="id">\d+</requirement>
     </route>

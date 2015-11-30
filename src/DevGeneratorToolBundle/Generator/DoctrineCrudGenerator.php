@@ -264,7 +264,7 @@ class DoctrineCrudGenerator extends Generator
      */
     protected function generateIndexView($dir)
     {
-        $this->renderFile($this->skeletonDir, 'views/list.html.twig.twig', $dir.'/Crud/list.html.twig', $this->tplOptions);
+        $this->renderFile($this->skeletonDir, 'views/list.html.twig.twig', $dir.'/list.html.twig', $this->tplOptions);
     }
 
     /**
@@ -274,7 +274,7 @@ class DoctrineCrudGenerator extends Generator
      */
     protected function generateShowView($dir)
     {
-        $this->renderFile($this->skeletonDir, 'views/show.html.twig.twig', $dir.'/Crud/show.html.twig', $this->tplOptions);
+        $this->renderFile($this->skeletonDir, 'views/show.html.twig.twig', $dir.'/show.html.twig', $this->tplOptions);
     }
 
     /**
@@ -284,7 +284,7 @@ class DoctrineCrudGenerator extends Generator
      */
     protected function generateNewView($dir)
     {
-        $this->renderFile($this->skeletonDir, 'views/create.html.twig.twig', $dir.'/Crud/create.html.twig', $this->tplOptions);
+        $this->renderFile($this->skeletonDir, 'views/create.html.twig.twig', $dir.'/create.html.twig', $this->tplOptions);
     }
 
     /**
@@ -294,7 +294,7 @@ class DoctrineCrudGenerator extends Generator
      */
     protected function generateEditView($dir)
     {
-        $this->renderFile($this->skeletonDir, 'views/edit.html.twig.twig', $dir.'/Crud/edit.html.twig', $this->tplOptions);
+        $this->renderFile($this->skeletonDir, 'views/edit.html.twig.twig', $dir.'/edit.html.twig', $this->tplOptions);
     }
 
     /**
